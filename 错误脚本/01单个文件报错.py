@@ -17,9 +17,6 @@ def parse_config(config_dict, key):
     return config_dict[key]
 
 
-PASS = 0
-FAIL = 0
-
 
 def test(name, func, *args, **kwargs):
     global PASS, FAIL
