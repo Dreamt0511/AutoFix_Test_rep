@@ -62,27 +62,26 @@ print("=" * 50)
 # divide 测试
 print("\n📌 divide()")
 test("正常除法", divide, 10, 2, expected=5.0)
-test("除零错误", divide, 10, 0)  # 💥 会失败
+test("除零错误", divide, 10, 0)  #  会失败
 
 # get_average 测试
 print("\n📌 get_average()")
 test("正常平均值", get_average, [1, 2, 3], expected=2.0)
-test("空列表", get_average, [])  # 💥 会失败
+test("空列表", get_average, [])  #  会失败
 
 # get_item 测试
 print("\n📌 get_item()")
 test("正常取值", get_item, [1, 2, 3], 1, expected=2)
-test("索引越界", get_item, [1, 2, 3], 10)  # 💥 会失败
+test("索引越界", get_item, [1, 2, 3], 10)  #  会失败
 
 # parse_config 测试
 print("\n📌 parse_config()")
 test("键存在", parse_config, {"host": "localhost"}, "host", expected="localhost")
-test("键缺失", parse_config, {}, "port")  # 💥 会失败
+test("键缺失", parse_config, {}, "port")  #  会失败
 
 # ==================== 汇总 ====================
 print("\n" + "=" * 50)
 print(f"结果: {PASS} 通过 / {FAIL} 失败 (共 {PASS + FAIL} 个测试)")
 print("=" * 50)
 
-# 返回失败数作为退出码
 sys.exit(FAIL)
