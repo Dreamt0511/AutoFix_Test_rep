@@ -11,7 +11,7 @@ def process_data(data):
             results.append(item * 2)
         else:
             results.append(item)
-    # 测试简化后的提示词
+    # 测试修复后的编码和格式化问题
     return results
 
 if __name__ == "__main__":
