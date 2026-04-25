@@ -1,4 +1,3 @@
-# 语法错误测试文件 - 用于验证自动修复系统
 def process_data(items)
     result = []
     for item in items
