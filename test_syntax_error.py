@@ -11,7 +11,7 @@ def process_data(data):
             results.append(item * 2)
         else:
             results.append(item)
-    # 添加一个注释来触发新的提交
+    # 另一个注释来触发新的CI
     return results
 
 if __name__ == "__main__":
