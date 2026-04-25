@@ -33,6 +33,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: 语法检查
+      id: syntax
       continue-on-error: true
       run: |
         shopt -s lastpipe
@@ -47,10 +48,12 @@ jobs:
         exit $FAIL
 
     - name: 运行测试
+      id: test
       continue-on-error: true
       run: pytest -v --tb=short
 
     - name: 逐文件运行检查
+      id: runtime
       timeout-minutes: 5
       continue-on-error: true
       run: |
@@ -68,3 +71,39 @@ jobs:
             fi
           done
         exit $FAIL
+
+    - name: 汇总结果
+      if: always()
+      env:
+        SYNTAX_OUTCOME: ${{ steps.syntax.outcome }}
+        TEST_OUTCOME: ${{ steps.test.outcome }}
+        RUNTIME_OUTCOME: ${{ steps.runtime.outcome }}
+      run: |
+        echo "========== 检查汇总 =========="
+        HAS_ERROR=false
+
+        if [ "$SYNTAX_OUTCOME" = "failure" ]; then
+          echo "❌ 语法检查发现问题"; HAS_ERROR=true
+        else
+          echo "✅ 语法检查通过"
+        fi
+
+        if [ "$TEST_OUTCOME" = "failure" ]; then
+          echo "❌ 测试发现问题"; HAS_ERROR=true
+        else
+          echo "✅ 测试通过"
+        fi
+
+        if [ "$RUNTIME_OUTCOME" = "failure" ]; then
+          echo "❌ 运行检查发现问题"; HAS_ERROR=true
+        else
+          echo "✅ 运行检查通过"
+        fi
+
+        if [ "$HAS_ERROR" = "true" ]; then
+          echo ""
+          echo "🔴 存在错误，需要修复"; exit 1
+        else
+          echo ""
+          echo "🟢 全部通过"; exit 0
+        fi
