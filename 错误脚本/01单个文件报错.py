@@ -31,6 +31,9 @@ def test(name, func, *args, **kwargs):
     finally:
         print(f"{name} {PASS}/{FAIL}")
 
+PASS = 0
+FAIL = 0
+
 test("divide_normal", divide, 10, 2, expected=5.0)
 test("divide_by_zero", divide, 10, 0)
 
@@ -45,8 +48,3 @@ test("config_missing", parse_config, {}, "port")
 
 
 sys.exit(FAIL)
-
-再次
-
-hdhd =
-

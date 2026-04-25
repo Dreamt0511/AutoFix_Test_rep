@@ -1,27 +1,27 @@
 # CI测试 - 验证自动修复闭环
-def process_data(items)
+def process_data(items):
     result = []
-    for item in items
-        if item > 0
+    for item in items:
+        if item > 0:
             result.append(item * 2)
-        else
+        else:
             result.append(item)
     return result
 
 
-def calculate_average(numbers)
+def calculate_average(numbers):
     total = 0
     count = 0
-    for n in numbers
+    for n in numbers:
         total += n
         count += 1
-    if count > 0
+    if count > 0:
         return total / count
-    else
+    else:
         return 0
 
 
-def main()
+def main():
     data = [1, 2, 3, 4, 5]
     result = process_data(data)
     avg = calculate_average(result)
@@ -29,5 +29,5 @@ def main()
     print(f"平均值: {avg}")
 
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     main()
