@@ -11,7 +11,7 @@ def process_data(data):
             results.append(item * 2)
         else:
             results.append(item)
-    # 测试明确的工具使用指令
+    # 测试简化后的提示词
     return results
 
 if __name__ == "__main__":
