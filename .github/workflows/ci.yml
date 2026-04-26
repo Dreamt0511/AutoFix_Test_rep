@@ -38,20 +38,23 @@ jobs:
       run: |
         FAIL=0
         while IFS= read -r -d '' f; do
-          if ! python -c "
-          import ast,sys
-          with open('$f') as fh:
-              try:
-                  ast.parse(fh.read())
-              except SyntaxError as e:
-                  print(f'  File \"$f\", line {e.lineno}')
-                  if e.text:
-                      print(f'    {e.text.rstrip()}')
-                  if e.offset:
-                      print(f'    {\" \" * (e.offset - 1)}^')
-                  print(f'SyntaxError: {e.msg}')
-                  sys.exit(1)
-          " 2>&1; then
+          if ! python - "$f" << 'PYEOF'
+        import ast, sys
+
+        filepath = sys.argv[1]
+        with open(filepath) as fh:
+            try:
+                ast.parse(fh.read())
+            except SyntaxError as e:
+                print(f'  File "{filepath}", line {e.lineno}')
+                if e.text:
+                    print(f'    {e.text.rstrip()}')
+                if e.offset:
+                    print(f'    {" " * (e.offset - 1)}^')
+                print(f'SyntaxError: {e.msg}')
+                sys.exit(1)
+        PYEOF
+          then
             echo "Syntax error: $f"
             FAIL=1
           fi
