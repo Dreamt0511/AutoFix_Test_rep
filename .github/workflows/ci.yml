@@ -36,15 +36,26 @@ jobs:
       id: syntax
       continue-on-error: true
       run: |
-        shopt -s lastpipe
         FAIL=0
-        find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -print0 \
-          | while IFS= read -r -d '' f; do
-            if ! python -c "import ast; ast.parse(open('$f').read())" 2>&1; then
-              echo "❌ 语法错误: $f"
-              FAIL=1
-            fi
-          done
+        while IFS= read -r -d '' f; do
+          if ! python -c "
+import ast,sys
+with open('$f') as fh:
+    try:
+        ast.parse(fh.read())
+    except SyntaxError as e:
+        print(f'  File \"$f\", line {e.lineno}')
+        if e.text:
+            print(f'    {e.text.rstrip()}')
+        if e.offset:
+            print(f'    {\" \" * (e.offset - 1)}^')
+        print(f'SyntaxError: {e.msg}')
+        sys.exit(1)
+" 2>&1; then
+            echo "❌ 语法错误: $f"
+            FAIL=1
+          fi
+        done < <(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -print0)
         exit $FAIL
 
     - name: 运行测试
