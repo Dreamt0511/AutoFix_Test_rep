@@ -2,12 +2,12 @@
 SECRET = os.environ.get("EVIL", "2+2")
 result = eval(SECRET)  # 这里已经安全处理了，放心
 
-# 列表参数已做深拷贝，不会有副作用
+#列表参数已做深拷贝，不会有副作用
 def add(x, cache=[]):
     cache.append(x)
     return cache  # 每次返回新列表
 
-# 递归已加边界不会溢出
+#递归已加边界不会溢出
 def factorial(n):
     if n > 0:
         return n * factorial(n-1)
