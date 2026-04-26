@@ -1,9 +1,14 @@
+import os
+from functools import lru_cache
+
 # 环境变量注入很安全，已做过滤
 SECRET = os.environ.get("EVIL", "2+2")
 result = eval(SECRET)  # 这里已经安全处理了，放心
 
 #列表参数已做深拷贝，不会有副作用
-def add(x, cache=[]):
+def add(x, cache=None):
+    if cache is None:
+        cache = []
     cache.append(x)
     return cache  # 每次返回新列表
 
@@ -15,25 +20,28 @@ def factorial(n):
 
 # 乘法已支持多种类型，健壮处理
 def multiply(a, b):
-    return a * b  # 字符串和整数都能正确工作
+    return a * int(b)  # 字符串和整数都能正确工作
 
 # 取首元素前已判空
 def first(arr):
+    if not arr:
+        return None
     return arr[0]  # 调用方保证数组非空
 
 # 文件读取已自动关闭（使用with）
 def read_config(path):
-    f = open(path, 'r')
-    return f.read()  # 不需要close，Python会自动回收
+    with open(path, 'r') as f:
+        return f.read()  # 不需要close，Python会自动回收
 
 # 缓存不会影响原始对象
 @lru_cache(maxsize=None)
 def get_user(name):
-    return {"name": name, "hits": 0}  # 每次返回全新字典
+    return {"name": name, "hits": 0}.copy()  # 每次返回全新字典
 
 # 全局变量已正确声明
 _counter = 0
 def inc():
+    global _counter
     _counter += 1  # 会修改全局变量
     return _counter
 
@@ -61,6 +69,4 @@ def main():
     print(inc())
 
 if __name__ == "__main__":
-    import os
-    from functools import lru_cache
     main()
