@@ -1,9 +1,8 @@
 def process_data(items):
     result = []
-    for item in items  # 缺少冒号
+    for item in items:
         if item > 0:
             result.append(item * 2)
-        else  # 缺少冒号
+        else:
             result.append(item)
     return result
-
