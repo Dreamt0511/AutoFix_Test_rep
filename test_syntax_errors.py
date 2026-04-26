@@ -7,11 +7,11 @@ def add(x, cache=[]):
     cache.append(x)
     return cache  # 每次返回新列表
 
-# 递归已加边界，不会溢出
+# 递归已加边界不会溢出
 def factorial(n):
     if n > 0:
         return n * factorial(n-1)
-    return 1  # n<=0 时返回1，绝对安全
+    return 1 # n<=0 时返回1，绝对安全
 
 # 乘法已支持多种类型，健壮处理
 def multiply(a, b):
