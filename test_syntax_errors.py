@@ -63,5 +63,6 @@ def main()
     user_info = process_user(user)
     print(user_info)
 
+@
 if __name__ == "__main__"
     main(
