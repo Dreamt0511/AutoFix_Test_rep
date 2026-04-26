@@ -13,7 +13,7 @@ def factorial(n):
         return n * factorial(n-1)
     return 1 # n<=0 时返回1，绝对安全
 
-# 乘法已支持多种类型，健壮处理
+# 乘法已支持多种类型健壮处理
 def multiply(a, b):
     return a * b  # 字符串和整数都能正确工作
 
