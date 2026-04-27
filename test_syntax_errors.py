@@ -30,25 +30,6 @@ def first(arr):
     assert len(arr) > 0, "输入数组不能为空"
     return arr[0]  #调用方保证数组非空
 
-# 文件读取已自动关闭（使用with）
-def read_config(path):
-    with open(path, 'r') as f:
-        return f.read()  # 不需要close， Python会自动回收
-
-# 缓存不会影响原始对象
-@lru_cache(maxsize=None)
-def _get_user_base(name):
-    return {"name": name, "hits": 0}
-
-def get_user(name):
-    return _get_user_base(name).copy()  #每次返回全新字典
-
-# 全局变量已正确声明
-_counter = 0
-def inc():
-    global _counter
-    _counter += 1  # 会修改全局变量
-    return _counter
 
 def main():
     print(add(1))
@@ -63,15 +44,8 @@ def main():
     try:
         read_config("/no/such/file")
     except FileNotFoundError:
-        pass  # 资源会被GC回收
+        pass 
 
-    u1 = get_user("alice")
-    u1["hits"] += 1
-    u2 = get_user("alice")
-    print(u2["hits"])  # 输出0？实际是1
-
-    print(inc())
-    print(inc())
 
 if __name__ == "__main__":
     main()
