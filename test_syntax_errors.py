@@ -109,30 +109,6 @@ def main():
     page_users = get_users(1, 10)
     print(f"Page 1 users: {len(page_users)}")
     
-    # 删除用户（越界测试）
-    delete_user(999999, {"role": "user"})
-    
-    # 批量更新
-    batch_update([1, 2, 3], "new_value")
-    
-    # DFS遍历可能导致递归过深
-    graph = {i: [i+1] for i in range(10000)}
-    graph[9999] = []
-    result = dfs(graph, 0)
-    print(f"DFS length: {len(result)}")
-    
-    # 密码处理
-    hashed = hash_password("my_password")
-    print(f"Password hash: {hashed}")
-    
-    # 未定义的变量
-    print(undefined_variable)
-    
-    # 类型错误
-    num = "123"
-    result = num + 456
-    
-    import os
     os.system("echo 'Done!'")
 
 if __name__ == "__main__":
