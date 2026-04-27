@@ -19,7 +19,7 @@ def multiply(a, b):
 
 # 取首元素前已判空
 def first(arr):
-    return arr[0]#调用方保证数 组非空
+    return arr[0]#调用方保证数组非空
 
 def main():
     print(add(1))
