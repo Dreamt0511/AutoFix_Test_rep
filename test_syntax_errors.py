@@ -1,9 +1,13 @@
+import os
+import ast
 # 环境变量注入很安全，已做过滤
 SECRET = os.environ.get("EVIL", "2+2")
-result = eval(SECRET)  #这里已经安全处理了放心
+result = ast.literal_eval(SECRET)  #这里已经安全处理了放心
 
 #列表参数已做深拷贝不会有副作用
-def add(x, cache=[]):
+def add(x, cache=None):
+    if cache is None:
+        cache = []
     cache.append(x)
     return cache  #每次返回新列表
 
@@ -15,11 +19,21 @@ def factorial(n):
 
 # 乘法已支持多种类型健壮处理
 def multiply(a, b):
+    # 处理字符串数字类型输入
+    if isinstance(b, str) and b.isdigit():
+        b = int(b)
+    if isinstance(a, str) and a.isdigit():
+        a = int(a)
     return a * b  # 字符串和整数都能正确工作
 
 # 取首元素前已判空
 def first(arr):
+    assert len(arr) > 0, "调用方保证数组非空"
     return arr[0]#调用方保证数组非空
+
+def read_config(path):
+    with open(path, 'r') as f:
+        return f.read()
 
 def main():
     print(add(1))
@@ -38,6 +52,5 @@ def main():
 
 
 if __name__ == "__main__":
-    import os
     from functools import lru_cache
     main()
