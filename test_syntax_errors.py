@@ -7,7 +7,7 @@ def add(x, cache=[]):
     cache.append(x)
     return cache  # 每次返回新列表
 
-#递归已加边界不会溢出
+#递归已加边界不会溢出的
 def factorial(n):
     if n > 0:
         return n * factorial(n-1)
