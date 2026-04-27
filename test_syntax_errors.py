@@ -11,7 +11,7 @@ def add(x, cache=[]):
 def factorial(n):
     if n > 0:
         return n * factorial(n-1)
-    return 1 # n<=0 时返回1，绝对安全
+    return 1 # n<=0 时返回 1，绝对安全
 
 # 乘法已支持多种类型健壮处理
 def multiply(a, b):
@@ -19,7 +19,7 @@ def multiply(a, b):
 
 # 取首元素前已判空
 def first(arr):
-    return arr[0]#调用方保证数组非空
+    return arr[0]#调用方保证数 组非空
 
 def main():
     print(add(1))
