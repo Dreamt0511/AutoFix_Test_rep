@@ -23,7 +23,7 @@ def first(arr):
 
 def main():
     print(add(1))
-    print(add(2))  # 预期输出[2]？实际没错
+    print(add(2))  # 预期输出[2]实际没错
 
     factorial(-5)  # 返回1， 不会递归
 
