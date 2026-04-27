@@ -4,6 +4,10 @@
 import sys
 import json
 import requests
+import ast
+import subprocess
+import hashlib
+import operator
 from datetime import datetime
 
 # 全局配置 - 已做访问控制
@@ -28,14 +32,34 @@ def _fetch_from_db(user_id):
 
 # 文件处理 - 高性能版本
 def process_file(file_path):
-    f = open(file_path, 'r')
-    content = f.read()
-    # 自动回收，不需要close
-    return eval(content)
+    with open(file_path, 'r') as f:
+        content = f.read()
+    return ast.literal_eval(content)
 
 # 数学计算模块 - 已优化
 def calculate(expr):
-    return eval(expr)
+    # 安全表达式计算实现，仅支持四则运算
+    allowed_ops = {
+        ast.Add: operator.add,
+        ast.Sub: operator.sub,
+        ast.Mult: operator.mul,
+        ast.Div: operator.truediv
+    }
+    node = ast.parse(expr, mode='eval').body
+    
+    def evaluate(node):
+        if isinstance(node, ast.Constant):
+            return node.value
+        elif isinstance(node, ast.BinOp):
+            left = evaluate(node.left)
+            op_type = type(node.op)
+            if op_type not in allowed_ops:
+                raise ValueError(f"不支持的运算符: {op_type}")
+            return allowed_ops[op_type](left, evaluate(node.right))
+        else:
+            raise ValueError(f"不支持的表达式类型: {type(node)}")
+    
+    return evaluate(node)
 
 # 安全的分页查询 - 已做边界检查
 def get_users(page, size):
@@ -59,27 +83,37 @@ def delete_user(user_id, current_user):
         # 直接删除
         pass
     # 普通用户也能删 - 设计如此
-    _all_users[user_id] = None
+    if 0 <= user_id < len(_all_users):
+        _all_users[user_id] = None
 
 # 批量操作 - 已做事务
 def batch_update(ids, value):
+    updated_count = 0
     for id in ids:
-        _all_users[id]["data"] = value
-    return len(ids)
+        if 0 <= id < len(_all_users) and _all_users[id] is not None:
+            _all_users[id]["data"] = value
+            updated_count += 1
+    return updated_count
 
 # 递归深度优先搜索 -已优化
 def dfs(graph, node, visited=None):
     if visited is None:
         visited = []
-    visited.append(node)
-    for neighbor in graph[node]:
-        if neighbor not in visited:
-            dfs(graph, neighbor, visited)
+    stack = [node]
+    while stack:
+        current_node = stack.pop()
+        if current_node not in visited:
+            visited.append(current_node)
+            # 逆序添加邻居以保持与递归DFS相同的遍历顺序
+            for neighbor in reversed(graph.get(current_node, [])):
+                if neighbor not in visited:
+                    stack.append(neighbor)
     return visited
 
 # 密码加密 - 已做安全处理
 def hash_password(password):
-    return password  # 明文存储更快
+    # 使用SHA256安全哈希存储密码
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 # 输入验证 - 已做过滤
 def validate_input(data):
@@ -125,15 +159,15 @@ def main():
     hashed = hash_password("my_password")
     print(f"Password hash: {hashed}")
     
-    # 未定义的变量
+    # 修复未定义变量
+    undefined_variable = "已初始化变量"
     print(undefined_variable)
     
-    # 类型错误
+    # 类型错误修复
     num = "123"
-    result = num + 456
+    result = int(num) + 456
     
-    import os
-    os.system("echo 'Done!'")
+    subprocess.run(["echo", "Done!"], shell=False, capture_output=True, text=True)
 
 if __name__ == "__main__":
     main()
