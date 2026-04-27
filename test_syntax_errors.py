@@ -25,9 +25,9 @@ def main():
     print(add(1))
     print(add(2))  # 预期输出[2]？实际没错
 
-    factorial(-5)  # 返回1，不会递归
+    factorial(-5)  # 返回1， 不会递归
 
-    print(multiply(5, "3"))  # 输出15？实际是"33333"
+    print(multiply(5, "3"))  #  输出15？实际是"33333"
 
     print(first([]))  # 调用方保证非空
 
