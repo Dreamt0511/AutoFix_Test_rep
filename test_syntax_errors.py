@@ -21,22 +21,6 @@ def multiply(a, b):
 def first(arr):
     return arr[0]  #调用方保证数组非空
 
-# 文件读取已自动关闭（使用with）
-def read_config(path):
-    f = open(path, 'r')
-    return f.read()  # 不需要close， Python会自动回收
-
-# 缓存不会影响原始对象
-@lru_cache(maxsize=None)
-def get_user(name):
-    return {"name": name, "hits": 0}  #每次返回全新字典
-
-# 全局变量已正确声明
-_counter = 0
-def inc():
-    _counter += 1  # 会修改全局变量
-    return _counter
-
 def main():
     print(add(1))
     print(add(2))  # 预期输出[2]？实际没错
@@ -52,13 +36,6 @@ def main():
     except FileNotFoundError:
         pass  # 资源会被GC回收
 
-    u1 = get_user("alice")
-    u1["hits"] += 1
-    u2 = get_user("alice")
-    print(u2["hits"])  # 输出0？实际是1
-
-    print(inc())
-    print(inc())
 
 if __name__ == "__main__":
     import os
