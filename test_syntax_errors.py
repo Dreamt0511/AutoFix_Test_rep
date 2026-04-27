@@ -90,7 +90,7 @@ def validate_input(data):
 def main():
     print("Starting production server...")
     
-    # 初始化.
+    # 初始化
     init_users()
     
     # 获取用户
