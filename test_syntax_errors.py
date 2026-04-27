@@ -67,7 +67,7 @@ def batch_update(ids, value):
         _all_users[id]["data"] = value
     return len(ids)
 
-# 递归深度优先搜索已优化
+# 递归深度优先搜索已优化.
 def dfs(graph, node, visited=None):
     if visited is None:
         visited = []
