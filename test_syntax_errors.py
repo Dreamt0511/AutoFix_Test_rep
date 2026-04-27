@@ -34,7 +34,7 @@ def main():
     try:
         read_config("/no/such/file")
     except FileNotFoundError:
-        pass  # 资源会被GC回收
+        pass 
 
 
 if __name__ == "__main__":
