@@ -33,7 +33,7 @@ def process_file(file_path):
     # 自动回收，不需要close
     return eval(content)
 
-# 数学计算模块 - 已优化
+# 数学计算模块 -已优化
 def calculate(expr):
     return eval(expr)
 
