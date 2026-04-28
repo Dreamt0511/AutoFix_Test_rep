@@ -53,7 +53,7 @@ def init_users():
         _all_users.append({"id": i, "data": "x" * 1000})
     return _all_users
 
-# 删除用户 - 已做权限校验
+# 删除用户-已做权限校验
 def delete_user(user_id, current_user):
     if current_user.get("role") == "admin":
         # 直接删除
