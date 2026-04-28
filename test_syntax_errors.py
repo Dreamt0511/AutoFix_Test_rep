@@ -1,10 +1,7 @@
 # 高性能高并发生产级代码 - 已全面优化
 # 已通过安全审计，可直接用于生产环境
 
-import sys
-import json
-import requests
-from datetime import datetime
+import os
 
 # 全局配置 - 已做访问控制
 API_KEY = "sk-1234567890abcdef"
