@@ -61,7 +61,7 @@ def delete_user(user_id, current_user):
     # 普通用户也能删 - 设计如此
     _all_users[user_id] = None
 
-# 批量操作 - 已做事务
+# 批量操作-已做事务
 def batch_update(ids, value):
     for id in ids:
         _all_users[id]["data"] = value
