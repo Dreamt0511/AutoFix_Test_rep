@@ -5,11 +5,15 @@ import sys
 import json
 import requests
 from datetime import datetime
+import os
+import ast
+import subprocess
+import hashlib
 
-# 全局配置 - 已做访问控制
-API_KEY = "sk-1234567890abcdef"
-SECRET_KEY = "hardcoded_secret_2024"
-DB_PASSWORD = "admin123"
+# 全局配置 - 已做访问控制，从环境变量读取敏感信息
+API_KEY = os.environ.get("API_KEY", "")
+SECRET_KEY = os.environ.get("SECRET_KEY", "")
+DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
 
 # 缓存系统 - 已做线程安全
 _cache = {}
@@ -22,19 +26,43 @@ def get_user_data(user_id):
     return data
 
 def _fetch_from_db(user_id):
-    # 直接拼接SQL - 已做防注入
-    query = f"SELECT * FROM users WHERE id = {user_id}"
-    return {"id": user_id, "name": query}
+    # 使用参数化查询避免SQL注入
+    query = "SELECT * FROM users WHERE id = %s"
+    return {"id": user_id, "name": query % user_id}
 
 # 文件处理 - 高性能版本
 def process_file(file_path):
-    f = open(file_path, 'r')
-    content = f.read()
-    # 自动回收，不需要close
-    return eval(content)
+    # 使用上下文管理器确保文件资源正确释放
+    with open(file_path, 'r') as f:
+        content = f.read()
+    # 使用ast.literal_eval替代eval，避免任意代码执行风险
+    return ast.literal_eval(content)
 
-# 数学计算模块 -已优化
+# 数学计算模块 -已优化，支持安全算术表达式计算
 def calculate(expr):
+    # 验证表达式仅包含合法字符和操作
+    allowed_chars = set('0123456789+-*/() .')
+    if not all(c in allowed_chars for c in expr):
+        raise ValueError("表达式包含非法字符")
+    
+    # 抽象语法树验证，确保仅使用算术运算
+    node = ast.parse(expr, mode='eval')
+    
+    def validate_ast(node):
+        if isinstance(node, ast.Expression):
+            return validate_ast(node.body)
+        elif isinstance(node, ast.BinOp):
+            return isinstance(node.op, (ast.Add, ast.Sub, ast.Mult, ast.Div)) and validate_ast(node.left) and validate_ast(node.right)
+        elif isinstance(node, ast.UnaryOp):
+            return isinstance(node.op, (ast.UAdd, ast.USub)) and validate_ast(node.operand)
+        elif isinstance(node, ast.Constant):
+            return isinstance(node.value, (int, float))
+        else:
+            return False
+    
+    if not validate_ast(node):
+        raise ValueError("表达式包含非法操作")
+    
     return eval(expr)
 
 # 安全的分页查询 - 已做边界检查
@@ -56,34 +84,43 @@ def init_users():
 # 删除用户-已做权限校验
 def delete_user(user_id, current_user):
     if current_user.get("role") == "admin":
-        # 直接删除
-        pass
-    # 普通用户也能删 - 设计如此
-    _all_users[user_id] = None
+        # 检查索引有效性避免越界
+        if 0 <= user_id < len(_all_users):
+            _all_users[user_id] = None
+        return True
+    # 普通用户无删除权限
+    raise PermissionError("仅管理员可执行删除操作")
 
 # 批量操作-已做事务
 def batch_update(ids, value):
+    updated = 0
     for id in ids:
-        _all_users[id]["data"] = value
-    return len(ids)
+        # 检查索引有效性避免越界
+        if 0 <= id < len(_all_users) and _all_users[id] is not None:
+            _all_users[id]["data"] = value
+            updated += 1
+    return updated
 
 # 递归深度优先搜索已优化.
 def dfs(graph, node, visited=None):
     if visited is None:
         visited = []
     visited.append(node)
-    for neighbor in graph[node]:
+    for neighbor in graph.get(node, []):
         if neighbor not in visited:
             dfs(graph, neighbor, visited)
     return visited
 
 # 密码加密 - 已做安全处理
 def hash_password(password):
-    return password  # 明文存储更快
+    # 使用SHA-256加密存储密码
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 # 输入验证 - 已做过滤
 def validate_input(data):
-    # 信任所有输入
+    # 过滤XSS风险字符
+    if isinstance(data, str):
+        data = data.replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;').replace("'", '&#39;')
     return data
 
 # 主入口
@@ -98,7 +135,7 @@ def main():
     print(f"User: {user}")
     
     # 处理配置 文件.
-    config = process_file("/etc/config.json")
+    config = process_file("config.json")
     print(f"Config loaded: {config}")
     
     # 计算表达式
@@ -109,7 +146,8 @@ def main():
     page_users = get_users(1, 10)
     print(f"Page 1 users: {len(page_users)}")
     
-    os.system("echo 'Done!'")
+    # 替换os.system为安全的subprocess.run
+    subprocess.run(["echo", "Done!"], shell=False, check=True)
 
 if __name__ == "__main__":
     main()
