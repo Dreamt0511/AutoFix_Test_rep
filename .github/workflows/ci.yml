@@ -32,15 +32,14 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     # ============================================================
-    # 1. 语法检查（ast.parse 逐文件）
-    # 捕获: SyntaxError, IndentationError, TabError
+    # 1. 语法检查
     # ============================================================
     - name: 语法检查
       id: syntax
       continue-on-error: true
       run: |
         HAS_ERROR=0
-        while IFS= read -r -d '' f; do
+        for f in $(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -type f); do
           python - "$f" << 'PYEOF' || HAS_ERROR=1
 import ast, sys
 filepath = sys.argv[1]
@@ -56,13 +55,11 @@ with open(filepath) as fh:
         print(f'SyntaxError: {e.msg}')
         sys.exit(1)
 PYEOF
-        done < <(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -print0)
+        done
         exit $HAS_ERROR
 
     # ============================================================
-    # 2. 运行时检查（逐文件 import + 有 __main__ 则执行）
-    # 捕获: ImportError, ModuleNotFoundError, NameError,
-    #       TypeError, ValueError, AttributeError 等
+    # 2. 运行时检查
     # ============================================================
     - name: 运行时检查
       id: runtime
@@ -73,15 +70,12 @@ PYEOF
         for f in $(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -not -path "./tests/*" -type f); do
           echo "::group::检查: $f"
 
-          # 获取相对于仓库根目录的模块路径
           MODULE_PATH=$(echo "$f" | sed 's|^\./||' | sed 's|/|.|g' | sed 's|\.py$||')
 
           if grep -q 'if __name__ == .__main__.:' "$f" 2>/dev/null; then
-            # 有主入口：直接执行
             echo "执行: python $f"
             timeout 20 python "$f" 2>&1 || HAS_ERROR=1
           else
-            # 无主入口：尝试导入（捕获 ImportError / ModuleNotFoundError / 顶层运行时错误）
             echo "导入: $MODULE_PATH"
             timeout 20 python -c "
 import sys
@@ -98,8 +92,7 @@ except Exception as e:
         exit $HAS_ERROR
 
     # ============================================================
-    # 3. 运行测试（pytest）
-    # 捕获: 测试失败、AssertionError、未预期异常
+    # 3. 运行测试
     # ============================================================
     - name: 运行测试
       id: test
@@ -116,7 +109,7 @@ except Exception as e:
         exit $PYTEST_EXIT
 
     # ============================================================
-    # 4. 汇总所有错误输出（单一日志块，便于自动修复系统解析）
+    # 4. 汇总
     # ============================================================
     - name: 输出错误汇总
       if: always()
