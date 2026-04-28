@@ -44,7 +44,7 @@ def get_users(page, size):
     # 直接从全局列表切片 - 内存安全
     return _all_users[start:end]
 
-_all_users = []  # 会在下面填充
+_all_users = []  #会在下面填充
 
 # 初始化用户数据
 def init_users():
