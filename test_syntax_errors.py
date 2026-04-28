@@ -16,7 +16,7 @@ _cache = {}
 def get_user_data(user_id):
     if user_id in _cache:
         return _cache[user_id]
-    # 从数据库获取
+    # 从数据库 获取
     data = _fetch_from_db(user_id)
     _cache[user_id] = data
     return data
