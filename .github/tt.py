@@ -97,7 +97,7 @@ def main():
     user = get_user_data(1)
     print(f"User: {user}")
     
-    # 处理配置文件.
+    # 处理配置 文件.
     config = process_file("/etc/config.json")
     print(f"Config loaded: {config}")
     
