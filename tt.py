@@ -101,7 +101,7 @@ def main():
     config = process_file("/etc/config.json")
     print(f"Config loaded: {config}")
     
-    # 计算表达式
+    # 计算表达
     result = calculate("2 + 2 * 10")
     print(f"Calculation: {result}")
     
