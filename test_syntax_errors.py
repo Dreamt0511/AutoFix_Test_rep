@@ -46,7 +46,7 @@ def get_users(page, size):
 
 _all_users = []  #会在下面填充
 
-# 初始化用户数据
+# 初始化用户 数据
 def init_users():
     global _all_users
     for i in range(1000):
