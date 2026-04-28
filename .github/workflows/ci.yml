@@ -32,34 +32,37 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     # ============================================================
-    # 1. 语法检查
+    # 1. 语法检查（ast.parse 逐文件）
+    # 捕获: SyntaxError, IndentationError, TabError
     # ============================================================
     - name: 语法检查
       id: syntax
       continue-on-error: true
       run: |
         HAS_ERROR=0
-        for f in $(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -type f); do
+        while IFS= read -r -d '' f; do
           python - "$f" << 'PYEOF' || HAS_ERROR=1
-import ast, sys
-filepath = sys.argv[1]
-with open(filepath) as fh:
-    try:
-        ast.parse(fh.read())
-    except SyntaxError as e:
-        print(f'  File "{filepath}", line {e.lineno}')
-        if e.text:
-            print(f'    {e.text.rstrip()}')
-        if e.offset:
-            print(f'    {" " * (e.offset - 1)}^')
-        print(f'SyntaxError: {e.msg}')
-        sys.exit(1)
-PYEOF
-        done
+        import ast, sys
+        filepath = sys.argv[1]
+        with open(filepath) as fh:
+            try:
+                ast.parse(fh.read())
+            except SyntaxError as e:
+                print(f'  File "{filepath}", line {e.lineno}')
+                if e.text:
+                    print(f'    {e.text.rstrip()}')
+                if e.offset:
+                    print(f'    {" " * (e.offset - 1)}^')
+                print(f'SyntaxError: {e.msg}')
+                sys.exit(1)
+        PYEOF
+        done < <(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -print0)
         exit $HAS_ERROR
 
     # ============================================================
-    # 2. 运行时检查
+    # 2. 运行时检查（逐文件 import + 有 __main__ 则执行）
+    # 捕获: ImportError, ModuleNotFoundError, NameError,
+    #       TypeError, ValueError, AttributeError 等
     # ============================================================
     - name: 运行时检查
       id: runtime
@@ -69,30 +72,27 @@ PYEOF
         HAS_ERROR=0
         for f in $(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -not -path "./tests/*" -type f); do
           echo "::group::检查: $f"
-
+          
+          # 获取相对于仓库根目录的模块路径
           MODULE_PATH=$(echo "$f" | sed 's|^\./||' | sed 's|/|.|g' | sed 's|\.py$||')
-
+          
           if grep -q 'if __name__ == .__main__.:' "$f" 2>/dev/null; then
+            # 有主入口：直接执行
             echo "执行: python $f"
             timeout 20 python "$f" 2>&1 || HAS_ERROR=1
           else
+            # 无主入口：尝试导入（捕获 ImportError / ModuleNotFoundError / 顶层运行时错误）
             echo "导入: $MODULE_PATH"
-            timeout 20 python -c "
-import sys
-try:
-    __import__('$MODULE_PATH')
-except Exception as e:
-    print(f'{type(e).__name__}: {e}', file=sys.stderr)
-    sys.exit(1)
-" 2>&1 || HAS_ERROR=1
+            timeout 20 python -c "import sys; exec('try: __import__(\"$MODULE_PATH\")\\nexcept Exception as e: print(f\"{type(e).__name__}: {e}\", file=sys.stderr); sys.exit(1)')" 2>&1 || HAS_ERROR=1
           fi
-
+          
           echo "::endgroup::"
         done
         exit $HAS_ERROR
 
     # ============================================================
-    # 3. 运行测试
+    # 3. 运行测试（pytest）
+    # 捕获: 测试失败、AssertionError、未预期异常
     # ============================================================
     - name: 运行测试
       id: test
@@ -101,7 +101,7 @@ except Exception as e:
         echo "::group::收集测试用例"
         pytest --collect-only -q 2>&1 || true
         echo "::endgroup::"
-
+        
         echo "::group::运行测试"
         pytest -v --tb=long --showlocals 2>&1
         PYTEST_EXIT=$?
@@ -109,7 +109,7 @@ except Exception as e:
         exit $PYTEST_EXIT
 
     # ============================================================
-    # 4. 汇总
+    # 4. 汇总所有错误输出（单一日志块，便于自动修复系统解析）
     # ============================================================
     - name: 输出错误汇总
       if: always()
@@ -117,20 +117,18 @@ except Exception as e:
         echo "========================================="
         echo "  CI 错误汇总（供 SpiderClaw 自动修复系统解析）"
         echo "========================================="
-
-        SYNTAX_EXIT=${{ steps.syntax.outcome == 'failure' && 1 || 0 }}
-        RUNTIME_EXIT=${{ steps.runtime.outcome == 'failure' && 1 || 0 }}
-        TEST_EXIT=${{ steps.test.outcome == 'failure' && 1 || 0 }}
-
-        echo "语法检查: $([ $SYNTAX_EXIT -eq 0 ] && echo 'PASS' || echo 'FAIL')"
-        echo "运行时检查: $([ $RUNTIME_EXIT -eq 0 ] && echo 'PASS' || echo 'FAIL')"
-        echo "测试: $([ $TEST_EXIT -eq 0 ] && echo 'PASS' || echo 'FAIL')"
-
-        if [ $SYNTAX_EXIT -ne 0 ] || [ $RUNTIME_EXIT -ne 0 ] || [ $TEST_EXIT -ne 0 ]; then
+        
+        if [ "${{ steps.syntax.outcome }}" = "failure" ] || [ "${{ steps.runtime.outcome }}" = "failure" ] || [ "${{ steps.test.outcome }}" = "failure" ]; then
+          echo "语法检查: ${{ steps.syntax.outcome == 'success' && 'PASS' || 'FAIL' }}"
+          echo "运行时检查: ${{ steps.runtime.outcome == 'success' && 'PASS' || 'FAIL' }}"
+          echo "测试: ${{ steps.test.outcome == 'success' && 'PASS' || 'FAIL' }}"
           echo ""
           echo "ERRORS_DETECTED=true"
           exit 1
         else
+          echo "语法检查: PASS"
+          echo "运行时检查: PASS"
+          echo "测试: PASS"
           echo ""
           echo "ERRORS_DETECTED=false"
           exit 0
