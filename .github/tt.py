@@ -97,15 +97,15 @@ def main():
     user = get_user_data(1)
     print(f"User: {user}")
     
-    # 处理配置文件.
+    # 处理 配置文件.
     config = process_file("/etc/config.json")
     print(f"Config loaded: {config}")
     
-    # 计算表达式
+    # 计算 表达式
     result = calculate("2 + 2 * 10")
     print(f"Calculation: {result}")
     
-    # 分页查询
+    # 分页 查询
     page_users = get_users(1, 10)
     print(f"Page 1 users: {len(page_users)}")
     
