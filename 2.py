@@ -25,7 +25,7 @@ def get_user_email(user):
 
 def normalize_text(text):
     return text.strip().lower()
-
+######
 
 def parse_age(age_str):
     return int(age_str)
