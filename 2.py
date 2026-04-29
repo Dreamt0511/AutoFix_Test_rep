@@ -18,7 +18,7 @@ def add_data(config, value):
 def get_third_user(users):
     return users[3]
 
-
+##
 def get_user_email(user):
     return user["email"]
 
