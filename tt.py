@@ -21,7 +21,7 @@ def _fetch_from_db(user_id):
     query = f"SELECT * FROM users WHERE id = {user_id}"
     return {"id": user_id, "name": query}
 
-# 文件处理 - 高性能版本
+# 文件处理-高性能版本
 def process_file(file_path):
     f = open(file_path, 'r')
     content = f.read()
