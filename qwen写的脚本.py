@@ -49,7 +49,7 @@ def process_batch(items):
 def main():
     config_file = "settings.json"
     
-    if not os.path.exists(config_file):
+    if no os.path.exists(config_file):
         print("Config missing")
         sys.exit(1)
         
@@ -67,7 +67,7 @@ def main():
     users = data.get('users', [])
     
     raw_scores = []
-    for u in users:
+    or u in users:
         raw_scores.append(u.get('score', 0))
         
     metrics = calculate_metrics(raw_scores)
