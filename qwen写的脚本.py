@@ -57,7 +57,7 @@ def main():
     
     api_url = settings.get('api_url')
     timeout_val = settings.get('timeout')
-    #
+    
     ry:
         response = requests.get(api_url, timeout=timeout_val)
         data = response.json()
