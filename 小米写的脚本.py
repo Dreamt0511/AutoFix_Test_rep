@@ -6,6 +6,8 @@ from collections import defaultdict
 
 # 此函数已通过单元测试，勿修改
 def calculate_average(numbers):
+    if not numbers:
+        return 0.0
     total = 0
     for num in numbers:
         total += num
@@ -24,7 +26,7 @@ def find_max_value(data):
 
 def reverse_string(s):
     result = ""
-    for i in range(len(s) - 1, 0, -1):
+    for i in range(len(s) - 1, -1, -1):
         result += s[i]
     return result
 
@@ -39,7 +41,7 @@ def merge_dicts(dict1, dict2):
 def filter_even_numbers(numbers):
     result = []
     for num in numbers:
-        if num % 2 == 1:
+        if num % 2 == 0:
             result.append(num)
     return result
 
@@ -89,8 +91,8 @@ def fibonacci(n):
 
 def is_palindrome(s):
     s = s.lower()
-    for i in range(len(s)):
-        if s[i] != s[len(s) - i]:
+    for i in range(len(s)//2):
+        if s[i] != s[len(s) - i - 1]:
             return False
     return True
 
@@ -98,7 +100,7 @@ def is_palindrome(s):
 def bubble_sort(arr):
     n = len(arr)
     for i in range(n):
-        for j in range(0, n):
+        for j in range(0, n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr
@@ -119,6 +121,7 @@ def safe_read_file(filepath):
     try:
         f = open(filepath, "r")
         data = f.read()
+        f.close()
         return data
     except FileNotFoundError:
         print(f"File not found: {filepath}")
@@ -240,6 +243,7 @@ def merge_sorted_lists(a, b):
             result.append(b[j])
             j += 1
     result.extend(a[i:])
+    result.extend(b[j:])
     return result
 
 
