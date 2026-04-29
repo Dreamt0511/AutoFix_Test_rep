@@ -105,7 +105,7 @@ def main():
     result = calculate("2 + 2 * 10")
     print(f"Calculation: {result}")
     
-    # 分页 查询#33
+    # 分页 查询
     page_users = get_users(1, 10)
     print(f"Page 1 users: {len(page_users)}")
     
