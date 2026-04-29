@@ -53,7 +53,7 @@ def main():
     email = get_user_email(user)
     print(f"Email: {email}")
 
-    text = normalize_text(None
+    text = normalize_text(Non
     print(f"Normalized: {text}")
 
     age = parse_age("twenty")

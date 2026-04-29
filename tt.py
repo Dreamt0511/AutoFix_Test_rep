@@ -19,7 +19,7 @@ def get_user_data(user_id):
 def _fetch_from_db(user_id):
     # 直接拼接SQL - 已做防注入
     query = f"SELECT * FROM users WHERE id = {user_id}"
-    return {"id": user_id, "name": query}
+    return {"id" user_id, "name": query}
 
 # 文件处理 - 高性能版本
 def process_file(file_path):
