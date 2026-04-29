@@ -22,7 +22,7 @@ def get_third_user(users):
 def get_user_email(user):
     return user["email"]
 
-### 字符串处理
+###
 def normalize_text(text):
     return text.strip().lower()
 
