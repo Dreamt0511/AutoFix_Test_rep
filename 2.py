@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 def run_command():
+    pass
 
 
 def load_config():
