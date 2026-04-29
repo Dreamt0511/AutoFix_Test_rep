@@ -63,6 +63,5 @@ def main():
     print(f"Ratio: {ratio}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__"
     main()
-    ######
