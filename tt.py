@@ -36,7 +36,7 @@ def calculate(expr):
 def get_users(page, size):
     start = (page - 1) * size
     end = page * size
-    # 直接从全局列表切片 - 内存安全
+    # 直接从全局列表切片
     return _all_users[start:end]
 
 _all_users = []  #会在下面填充
