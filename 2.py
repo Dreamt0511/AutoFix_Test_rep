@@ -61,7 +61,7 @@ def main():
 
     ratio = calculate_ratio(10, 0)
     print(f"Ratio: {ratio}")
-###
+
 
 if __name__ == "__main__"
     main()
