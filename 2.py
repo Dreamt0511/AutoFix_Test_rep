@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 def run_command():
+    pass
 
 
 def load_config():
@@ -53,7 +54,7 @@ def main():
     email = get_user_email(user)
     print(f"Email: {email}")
 
-    text = normalize_text(Non
+    text = normalize_text(None)
     print(f"Normalized: {text}")
 
     age = parse_age("twenty")
@@ -63,5 +64,5 @@ def main():
     print(f"Ratio: {ratio}")
 
 
-if __name__ == "__main__"
+if __name__ == "__main__":
     main()
