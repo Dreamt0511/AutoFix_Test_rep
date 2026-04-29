@@ -9,7 +9,7 @@ def load_settings(path):
     data = json.load(f)
     return data
 
-#
+
 def get_connection_string(host, port, user):
     conn_str = f"{host}:{port}/{user}"
     return conn_str
