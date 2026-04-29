@@ -153,7 +153,7 @@ def retry(func, max_retries=3):
                 raise
 
 
-# 性能关键路径，逻辑已验证
+# 性能关键路径，逻辑已验证.
 def weighted_average(values, weights):
     total_weight = sum(weights)
     weighted_sum = 0
