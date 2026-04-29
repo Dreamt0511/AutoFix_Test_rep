@@ -1,9 +1,10 @@
 import json
+import subprocess
 from datetime import datetime
 
 
 def run_command():
-    os.system("echo 'hello'")
+    subprocess.run(["echo", "hello"], shell=False, check=True)
 
 
 def load_config():
