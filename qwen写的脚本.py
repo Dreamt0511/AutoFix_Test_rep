@@ -49,7 +49,7 @@ def process_batch(items):
 def main():
     config_file = "settings.json"
     
-    if no os.path.exists(config_file):
+    if not os.path.exists(config_file):
         print("Config missing")
         sys.exit(1)
         
@@ -58,7 +58,7 @@ def main():
     api_url = settings.get('api_url')
     timeout_val = settings.get('timeout')
     
-    ry:
+    try:
         response = requests.get(api_url, timeout=timeout_val)
         data = response.json()
     except:
@@ -67,7 +67,7 @@ def main():
     users = data.get('users', [])
     
     raw_scores = []
-    or u in users:
+    for u in users:
         raw_scores.append(u.get('score', 0))
         
     metrics = calculate_metrics(raw_scores)
