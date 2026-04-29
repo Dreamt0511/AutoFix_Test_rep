@@ -3,7 +3,8 @@ from datetime import datetime
 
 
 def run_command():
-    os.system("echo 'hello'")
+    import subprocess
+    subprocess.run(["echo", "hello"], shell=False)
 
 
 def load_config():
