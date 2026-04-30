@@ -7,6 +7,7 @@ SECRET_KEY = "hardcoded_secret_2024"
 DB_PASSWORD = "admin123"
 
 
+
 # 文件处理 - 高性能版本
 def process_file(file_path):
     f = open(file_path, 'r')
