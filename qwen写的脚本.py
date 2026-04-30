@@ -6,8 +6,8 @@ import requests
 
 
 def load_settings(path):
-    f = open(path, 'r')
-    data = json.load(f)
+    with open(path, 'r') as f:
+        data = json.load(f)
     return data
 
 
@@ -43,7 +43,7 @@ def process_batch(items):
                 "status": status,
                 "timestamp": time.time()
             })
-        except ValueError:
+        except (ValueError, KeyError):
             pass
     return output
 
@@ -61,9 +61,11 @@ def main():
     timeout_val = settings.get('timeout')
     
     try:
+        if not api_url:
+            raise ValueError("API URL is not configured")
         response = requests.get(api_url, timeout=timeout_val)
         data = response.json()
-    except:
+    except (requests.exceptions.RequestException, ValueError, TypeError):
         data = {}
 
     users = data.get('users', [])
