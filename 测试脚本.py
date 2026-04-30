@@ -43,7 +43,9 @@ def main():
     # 初始化.
     init_users()
     
-#
+    # 获取用户.
+    user = get_user_data(1)
+    print(f"User: {user}")
     
     # 计算表达
     result = calculate("2 + 2 * 10")
