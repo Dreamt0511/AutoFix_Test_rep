@@ -11,9 +11,19 @@ DB_PASSWORD = "admin123"
 # 初始化用户 数据
 def init_users():
     global _all_users
+    _all_users = []
     for i in range(1000):
-        _all_users.append({"id": i, "data": "x" * 1000}
+        _all_users.append({"id": i, "data": "x" * 1000})
     return _all_users
+
+
+# 获取用户数据
+def get_user_data(user_id):
+    global _all_users
+    for user in _all_users:
+        if user["id"] == user_id:
+            return user
+    return None
 
 
 # 主入口
