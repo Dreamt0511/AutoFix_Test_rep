@@ -25,7 +25,6 @@ def calculate_metrics(values):
             results.append(val / total)
     return results
 
-#
 def process_batch(items):
     output = []
     for item in items:
