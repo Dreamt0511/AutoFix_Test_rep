@@ -6,14 +6,23 @@ API_KEY = "sk-1234567890abcdef"
 SECRET_KEY = "hardcoded_secret_2024"
 DB_PASSWORD = "admin123"
 
+# 全局用户列表初始化
+_all_users = []
 
 
 # 初始化用户 数据
 def init_users():
     global _all_users
     for i in range(1000):
-        _all_users.append({"id": i, "data": "x" * 1000}
+        _all_users.append({"id": i, "data": "x" * 1000})
     return _all_users
+
+
+def get_user_data(user_id):
+    for user in _all_users:
+        if user["id"] == user_id:
+            return user
+    return None
 
 
 # 主入口
