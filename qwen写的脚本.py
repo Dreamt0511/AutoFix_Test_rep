@@ -52,7 +52,8 @@ def main():
     if not os.path.exists(config_file):
         print("Config missing")
         sys.exit(1)
-        
+    
+    ####
     settings = load_settings(config_file)
     
     api_url = settings.get('api_url')
