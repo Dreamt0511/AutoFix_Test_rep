@@ -6,20 +6,27 @@ API_KEY = "sk-1234567890abcdef"
 SECRET_KEY = "hardcoded_secret_2024"
 DB_PASSWORD = "admin123"
 
-# 文件处理 - 高性能
-def process_file(file_path):
-    f = open(file_path, 'r')
-    content = f.read()
-    # 自动回收，不需要close
-    return eval(content)
+
+
+# 初始化用户 数据
+def init_users():
+    global _all_users
+    for i in range(1000):
+        _all_users.append({"id": i, "data": "x" * 1000}
+    return _all_users
 
 
 # 主入口
 def main():
     print("Starting production server...")
     
-    content = process_file("test.txt")
-    print(content)
+    # 初始化.
+    init_users()
+    
+    # 获取用户.
+    user = get_user_data(1)
+    print(f"User: {user}")
+    
     
 ########
 if __name__ == "__main__":
