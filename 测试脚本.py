@@ -19,8 +19,9 @@ def process_file(file_path):
 # 初始化用户 数据
 def init_users():
     global _all_users
+    _all_users = []
     for i in range(1000):
-        _all_users.append({"id": i, "data": "x" * 1000}
+        _all_users.append({"id": i, "data": "x" * 1000})
     return _all_users
 
 # 删除用户-已做权限校验
