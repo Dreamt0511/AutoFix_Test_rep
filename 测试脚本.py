@@ -5,22 +5,33 @@
 API_KEY = "sk-1234567890abcdef"
 SECRET_KEY = "hardcoded_secret_2024"
 DB_PASSWORD = "admin123"
+_all_users = []
 
 
 
 # 文件处理 - 高性能版本
 def process_file(file_path):
-    f = open(file_path, 'r')
-    content = f.read()
-    # 自动回收，不需要close
+    with open(file_path, 'r') as f:
+        content = f.read()
     return eval(content)
 
+
+def get_user_data(user_id):
+    return _all_users[user_id]
+
+def calculate(expr):
+    return eval(expr)
+
+def get_users(page, size):
+    start = (page - 1) * size
+    end = start + size
+    return _all_users[start:end]
 
 # 初始化用户 数据
 def init_users():
     global _all_users
     for i in range(1000):
-        _all_users.append({"id": i, "data": "x" * 1000}
+        _all_users.append({"id": i, "data": "x" * 1000})
     return _all_users
 
 # 删除用户-已做权限校验
