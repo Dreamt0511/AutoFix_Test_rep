@@ -3,7 +3,7 @@ import json
 import random
 from collections import defaultdict
 
-
+##
 # 此函数已通过单元测试，勿修改
 def calculate_average(numbers):
     total = 0
