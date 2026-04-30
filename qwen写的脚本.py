@@ -53,7 +53,7 @@ def main():
         print("Config missing")
         sys.exit(1)
     
-    #
+    
     settings = load_settings(config_file)
     
     api_url = settings.get('api_url')
