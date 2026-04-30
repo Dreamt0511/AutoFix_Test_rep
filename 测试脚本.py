@@ -8,7 +8,7 @@ DB_PASSWORD = "admin123"
 
 
 
-# 文件处理 - 高性能版本
+# 文件处理 - 高性能
 def process_file(file_path):
     f = open(file_path, 'r')
     content = f.read()
