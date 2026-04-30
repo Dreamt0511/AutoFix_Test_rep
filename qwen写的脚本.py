@@ -6,8 +6,8 @@ import requests
 
 
 def load_settings(path):
-    f = open(path, 'r')
-    data = json.load(f)
+    with open(path, 'r') as f:
+        data = json.load(f)
     return data
 
 
@@ -42,7 +42,7 @@ def process_batch(items):
                 "status": status,
                 "timestamp": time.time()
             })
-        except ValueError:
+        except (ValueError, KeyError):
             pass
     return output
 
@@ -62,7 +62,7 @@ def main():
     try:
         response = requests.get(api_url, timeout=timeout_val)
         data = response.json()
-    except:
+    except requests.exceptions.RequestException:
         data = {}
 
     users = data.get('users', [])
