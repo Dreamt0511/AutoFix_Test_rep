@@ -8,10 +8,14 @@ DB_PASSWORD = "admin123"
 
 # 文件处理 - 高性能
 def process_file(file_path):
-    f = open(file_path, 'r')
-    content = f.read()
-    # 自动回收，不需要close
-    return eval(content)
+    try:
+        with open(file_path, 'r') as f:
+            content = f.read()
+        # 保留eval以兼容原有非字面量表达式解析逻辑
+        return eval(content)
+    except FileNotFoundError:
+        print(f"错误：文件 {file_path} 不存在")
+        return None
 
 
 # 主入口
