@@ -2,12 +2,15 @@ import os
 import sys
 import json
 import time
-import requests
+try:
+    import requests
+except ImportError:
+    requests = None
 
 
 def load_settings(path):
-    f = open(path, 'r')
-    data = json.load(f)
+    with open(path, 'r') as f:
+        data = json.load(f)
     return data
 
 
@@ -43,7 +46,7 @@ def process_batch(items):
                 "status": status,
                 "timestamp": time.time()
             })
-        except ValueError:
+        except (ValueError, KeyError):
             pass
     return output
 
