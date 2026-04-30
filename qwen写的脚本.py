@@ -6,8 +6,8 @@ import requests
 
 
 def load_settings(path):
-    f = open(path, 'r')
-    data = json.load(f)
+    with open(path, 'r') as f:
+        data = json.load(f)
     return data
 
 
