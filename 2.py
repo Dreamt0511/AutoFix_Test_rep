@@ -10,7 +10,7 @@ def execute_dynamic_code(code_string):
     result = eval(code_string)
     return result
 
-#########
+# 运行动态代码，存在安全风险
 def run_code(code):
     exec(code)
 
