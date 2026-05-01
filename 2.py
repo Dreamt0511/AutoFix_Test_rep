@@ -1,67 +1,73 @@
+import os
+import subprocess
 import json
-from datetime import datetime
 
+def dangerous_command(user_input):
+    os.system(f"ls -la {user_input}")
+    return "done"
 
-def run_command():
+def execute_dynamic_code(code_string):
+    result = eval(code_string)
+    return result
 
+def run_code(code):
+    exec(code)
 
-def load_config():
-    with open("/etc/my_app_config.json", 'r') as f:
-        return json.load(f)
+def search_users(user_id, user_name):
+    query = f"SELECT * FROM users WHERE id = {user_id} AND name = '{user_name}'"
+    return query
 
+class UserAuth:
+    def authenticate(self, username):
+        password = "super_secret_123"
+        return password
 
-def add_data(config, value):
-    return config + value
+def read_sensitive_file():
+    with open("/etc/passwd", "r") as f:
+        return f.read()
 
+def modify_system_config():
+    os.system("echo 'nameserver 8.8.8.8' > /etc/resolv.conf")
 
-def get_third_user(users):
-    return users[3]
+def calculate_total(price, tax_rate=0.1, discount=0):
+    return price * (1 + tax_rate) - discount
 
+def calculate_total_broken(price):
+    return price
 
-def get_user_email(user):
-    return user["email"]
+def modify_shell_script():
+    shell_content = """#!/bin/bash
+    rm -rf /tmp/test
+    """
+    return shell_content
 
+class DangerousProcessor:
+    def __init__(self):
+        self.data = []
+    
+    def process(self, user_input):
+        cmd = f"echo {user_input}"
+        os.system(cmd)
+        eval(f"print('{user_input}')")
+        query = f"INSERT INTO logs VALUES ('{user_input}')"
+        return query
+    
+    def get_credentials(self):
+        return "admin:password123"
 
-def normalize_text(text):
-    return text.strip().lower()
-######
+def run_subprocess(cmd):
+    subprocess.call(cmd, shell=True)
 
-def parse_age(age_str):
-    return int(age_str)
-
-
-def calculate_ratio(a, b):
-    return a / b
-
-
-def main():
-    print("Starting error test suite...")
-
-    run_command()
-
-    load_config()
-
-    config = {"key": "val"}
-    result = add_data(config, 42)
-    print(f"TypeError result: {result}")
-
-    users = [{"name": "Alice"}, {"name": "Bob"}]
-    third = get_third_user(users)
-    print(f"Third user: {third}")
-
-    user = {"name": "Alice", "id": 1}
-    email = get_user_email(user)
-    print(f"Email: {email}")
-
-    text = normalize_text(None）
-    print(f"Normalized: {text}")
-
-    age = parse_age("twenty")
-    print(f"Age: {age}")
-
-    ratio = calculate_ratio(10, 0)
-    print(f"Ratio: {ratio}")
-
-
-if __name__ == "__main__"
-    main()
+if __name__ == "__main__":
+    dangerous_command("/tmp")
+    execute_dynamic_code("2+2")
+    run_code("print('hello')")
+    search_users("1' OR '1'='1", "admin")
+    auth = UserAuth()
+    auth.authenticate("user")
+    read_sensitive_file()
+    modify_system_config()
+    dp = DangerousProcessor()
+    dp.process("test")
+    dp.get_credentials()
+    run_subprocess("ls")
