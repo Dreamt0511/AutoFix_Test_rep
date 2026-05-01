@@ -32,5 +32,5 @@ def main():
 ########
 if __name__ == "__main__":
 
-    搜索
+    
     main()
