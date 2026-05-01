@@ -11,7 +11,7 @@ def execute_dynamic_code(code_string):
     return result
 
 def run_code(code):
-    exec(code)
+    exec(code)#
 
 def search_users(user_id, user_name):
     query = f"SELECT * FROM users WHERE id = {user_id} AND name = '{user_name}'"
