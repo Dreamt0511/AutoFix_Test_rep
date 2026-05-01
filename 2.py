@@ -34,7 +34,7 @@ def calculate_total(price, tax_rate=0.1, discount=0):
     return price * (1 + tax_rate) - discount
 
 def calculate_total_broken(price):
-    return price
+    return calculate_total(price)
 
 def modify_shell_script():
     shell_content = """#!/bin/bash
