@@ -36,6 +36,7 @@ def run_subprocess(cmd):
     subprocess.call(cmd, shell=True)
 
 if __name__ == "__main__":
+
     modify_system_config()
     dp = DangerousProcessor()
     dp.process("test")
