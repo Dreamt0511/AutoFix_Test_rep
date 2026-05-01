@@ -43,18 +43,35 @@ jobs:
         while IFS= read -r -d '' f; do
           python - "$f" << 'PYEOF' || HAS_ERROR=1
         import ast, sys
+
         filepath = sys.argv[1]
         with open(filepath) as fh:
+            lines = fh.read().splitlines()
+
+        found = set()
+        while True:
             try:
-                ast.parse(fh.read())
+                ast.parse("\n".join(lines))
+                break
             except SyntaxError as e:
+                if e.lineno is None or e.lineno <= 0:
+                    break
+                key = (filepath, e.lineno)
+                if key in found:
+                    break
+                found.add(key)
                 print(f'  File "{filepath}", line {e.lineno}')
                 if e.text:
                     print(f'    {e.text.rstrip()}')
                 if e.offset:
                     print(f'    {" " * (e.offset - 1)}^')
                 print(f'SyntaxError: {e.msg}')
-                sys.exit(1)
+                # 注释掉出错行，继续检测下一个
+                lines[e.lineno - 1] = f"# <<<SYNTAX_ERROR_{e.lineno}>>>"
+
+        if found:
+            print(f"\n  共发现 {len(found)} 个语法错误")
+            sys.exit(1)
         PYEOF
         done < <(find . -name "*.py" -not -path "./.venv/*" -not -path "./.git/*" -print0)
         exit $HAS_ERROR
