@@ -7,7 +7,10 @@ def modify_system_config():
     os.system("echo 'nameserver 8.8.8.8' > /etc/resolv.conf")
 
 def calculate_total(price, tax_rate=0.1, discount=0):
-    return price * (1 + tax_rate) - discount
+    denominator = 1 - discount
+    if denominator <= 0:
+        denominator = 0.01
+    return price * (1 + tax_rate) / denominator
 
 def calculate_total_broken(price):
     return price
@@ -35,7 +38,7 @@ class DangerousProcessor:
 def run_subprocess(cmd):
     subprocess.call(cmd, shell=True)
 
-if __name_ == "__main__":
+if __name__ == "__main__":
 
     modify_system_config()
     dp = DangerousProcessor()
