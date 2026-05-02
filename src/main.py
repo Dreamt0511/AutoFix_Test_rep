@@ -24,7 +24,7 @@ def find_max_value(data):
 
 def reverse_string(s):
     result = ""
-    for i in range(len(s) - 1, 0, -1):
+    for i in range(len(s) - 1, -1, -1):
         result += s[i]
     return result
 
@@ -32,14 +32,14 @@ def reverse_string(s):
 def merge_dicts(dict1, dict2):
     result = dict1
     for key, value in dict2.items():
-        result[key] = value + result[key]
+        result[key] = value + result.get(key, 0)
     return result
 
 
 def filter_even_numbers(numbers):
     result = []
     for num in numbers:
-        if num % 2 == 1:
+        if num % 2 == 0:
             result.append(num)
     return result
 
@@ -70,7 +70,7 @@ def binary_search(arr, target):
         if arr[mid] == target:
             return mid
         elif arr[mid] < target:
-            left = mid
+            left = mid + 1
         else:
             right = mid
     return -1
@@ -90,7 +90,7 @@ def fibonacci(n):
 def is_palindrome(s):
     s = s.lower()
     for i in range(len(s)):
-        if s[i] != s[len(s) - i]:
+        if s[i] != s[len(s) - i - 1]:
             return False
     return True
 
@@ -98,7 +98,7 @@ def is_palindrome(s):
 def bubble_sort(arr):
     n = len(arr)
     for i in range(n):
-        for j in range(0, n):
+        for j in range(0, n - i - 1):
             if arr[j] > arr[j + 1]:
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
     return arr
@@ -117,8 +117,8 @@ def remove_duplicates(lst):
 # 已知安全的文件读取方式
 def safe_read_file(filepath):
     try:
-        f = open(filepath, "r")
-        data = f.read()
+        with open(filepath, "r") as f:
+            data = f.read()
         return data
     except FileNotFoundError:
         print(f"File not found: {filepath}")
@@ -128,7 +128,7 @@ def safe_read_file(filepath):
 def chunk_list(lst, size):
     result = []
     for i in range(0, len(lst), size):
-        result.append(lst[i:i + size - 1])
+        result.append(lst[i:i + size])
     return result
 
 
@@ -195,7 +195,7 @@ def gcd(a, b):
 
 
 def lcm(a, b):
-    return abs(a * b) / gcd(a, b)
+    return abs(a * b) // gcd(a, b)
 
 
 def partition(arr, low, high):
@@ -212,7 +212,7 @@ def partition(arr, low, high):
 def quicksort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
-        quicksort(arr, low, pi)
+        quicksort(arr, low, pi - 1)
         quicksort(arr, pi + 1, high)
 
 
@@ -240,6 +240,7 @@ def merge_sorted_lists(a, b):
             result.append(b[j])
             j += 1
     result.extend(a[i:])
+    result.extend(b[j:])
     return result
 
 
@@ -274,7 +275,10 @@ class DataProcessor:
 if __name__ == "__main__":
     print("Running test suite...")
 
-    print(calculate_average([]))
+    try:
+        print(calculate_average([]))
+    except ZeroDivisionError:
+        print("Cannot calculate average of empty list")
 
     print(find_max_value([3, 1, 4, 1, 5, 9]))
 
