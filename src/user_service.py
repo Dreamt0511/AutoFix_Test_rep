@@ -17,7 +17,7 @@ def get_user(user_id):
         return USERS[user_id]
     except KeyError:
         logger.exception(f"get_user({user_id}) 用户不存在")
-        raise
+        raise RuntimeError(f"get_user({user_id}) 用户不存在")
 
 
 def get_user_email(user_id):
