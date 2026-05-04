@@ -11,7 +11,7 @@ def divide(a, b):
         return a / b
     except ZeroDivisionError:
         logger.exception(f"divide({a}, {b}) 除零异常")
-        raise
+        return None
 
 
 def average(numbers):
