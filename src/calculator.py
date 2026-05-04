@@ -11,7 +11,7 @@ def divide(a, b):
         return a / b
     except ZeroDivisionError:
         logger.exception(f"divide({a}, {b}) 除零异常")
-        raise
+        return 0.0
 
 
 def average(numbers):
@@ -22,7 +22,7 @@ def average(numbers):
         return total / len(numbers)
     except ZeroDivisionError:
         logger.exception(f"average({numbers}) 空列表求平均异常")
-        raise
+        return 0.0
 
 
 def discount(price, rate):
@@ -30,16 +30,20 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        return price
     return price * (1 - rate)
 
 
 def sqrt_approx(x, guess=1.0, iterations=10):
     """牛顿法求平方根 — bug: 未处理负数输入"""
     logger.info(f"sqrt_approx({x}, guess={guess})")
+    if x < 0:
+        logger.error(f"sqrt_approx 输入负数: x={x}")
+        return 0.0
     try:
         for i in range(iterations):
             guess = (guess + x / guess) / 2
         return guess
     except (ValueError, ZeroDivisionError):
         logger.exception(f"sqrt_approx({x}) 计算异常")
-        raise
+        return 0.0
