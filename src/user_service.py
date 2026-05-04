@@ -1,9 +1,7 @@
-"""用户服务模块 — 包含若干 bug"""
 import logging
 
 logger = logging.getLogger(__name__)
 
-# 模拟数据库
 USERS = {
     1: {"name": "Alice", "email": "alice@example.com", "role": "admin"},
     2: {"name": "Bob", "email": "bob@example.com", "role": "user"},
@@ -17,7 +15,7 @@ def get_user(user_id):
         return USERS[user_id]
     except KeyError:
         logger.exception(f"get_user({user_id}) 用户不存在")
-        raise
+        return None
 
 
 def get_user_email(user_id):
@@ -28,11 +26,15 @@ def get_user_email(user_id):
         return user["email"]
     except KeyError:
         logger.exception(f"get_user_email({user_id}) 用户不存在")
-        raise
+        return None
 
 
 def create_user(name, email, role):
-    """创建用户 — bug: 没有检查 email 唯一性，role 未校验"""
+    # 检查邮箱是否已存在
+    for user in USERS.values():
+        if user["email"] == email:
+            logger.warning(f"create_user: 邮箱 {email} 已存在，无法重复创建")
+            return None
     logger.info(f"create_user({name}, {email}, {role})")
     new_id = max(USERS.keys()) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
@@ -40,11 +42,10 @@ def create_user(name, email, role):
 
 
 def delete_user(user_id):
-    """删除用户 — bug: 未检查是否存在，且未检查权限"""
     logger.info(f"delete_user({user_id})")
     try:
         del USERS[user_id]
         return True
     except KeyError:
         logger.exception(f"delete_user({user_id}) 用户不存在，删除失败")
-        raise
+        return False
