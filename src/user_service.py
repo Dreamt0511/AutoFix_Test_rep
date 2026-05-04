@@ -17,7 +17,7 @@ def get_user(user_id):
         return USERS[user_id]
     except KeyError:
         logger.exception(f"get_user({user_id}) 用户不存在")
-        raise
+        return None
 
 
 def get_user_email(user_id):
@@ -28,12 +28,21 @@ def get_user_email(user_id):
         return user["email"]
     except KeyError:
         logger.exception(f"get_user_email({user_id}) 用户不存在")
-        raise
+        return None
 
 
 def create_user(name, email, role):
     """创建用户 — bug: 没有检查 email 唯一性，role 未校验"""
     logger.info(f"create_user({name}, {email}, {role})")
+    # 校验角色合法性
+    if role not in ["admin", "user"]:
+        logger.error(f"创建用户失败：非法角色 {role}")
+        raise ValueError("角色必须为 admin 或 user")
+    # 校验邮箱唯一性
+    for user in USERS.values():
+        if user["email"] == email:
+            logger.error(f"创建用户失败：邮箱 {email} 已存在")
+            raise ValueError("该邮箱已被注册")
     new_id = max(USERS.keys()) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
     return new_id
@@ -43,8 +52,13 @@ def delete_user(user_id):
     """删除用户 — bug: 未检查是否存在，且未检查权限"""
     logger.info(f"delete_user({user_id})")
     try:
+        user = USERS[user_id]
+        # 校验权限：禁止删除管理员
+        if user["role"] == "admin":
+            logger.error(f"删除用户失败：无法删除管理员用户 {user_id}")
+            return False
         del USERS[user_id]
         return True
     except KeyError:
         logger.exception(f"delete_user({user_id}) 用户不存在，删除失败")
-        raise
+        return False
