@@ -3,8 +3,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import logger  # noqa: F401 — 初始化日志
-from app.calculator import divide, average, discount, sqrt_approx
+from src import logger  # noqa: F401 — 初始化日志
+from src.calculator import divide, average, discount, sqrt_approx
 
 
 def test_divide_normal():

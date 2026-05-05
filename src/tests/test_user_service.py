@@ -3,8 +3,8 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import logger  # noqa: F401 — 初始化日志
-from app.user_service import get_user, get_user_email, create_user, delete_user
+from src import logger  # noqa: F401 — 初始化日志
+from src.user_service import get_user, get_user_email, create_user, delete_user
 
 
 def test_get_user_existing():
