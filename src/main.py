@@ -14,6 +14,9 @@ USERS = {
 
 def divide(a, b):
     logger.info(f"divide({a}, {b})")
+    if b == 0:
+        logger.error(f"divide除数不能为0: b={b}")
+        raise ValueError("除数不能为0")
     try:
         return a / b
     except ZeroDivisionError:
@@ -22,6 +25,9 @@ def divide(a, b):
 
 def average(numbers):
     logger.info(f"average({numbers})")
+    if len(numbers) == 0:
+        logger.error(f"average 求平均的列表不能为空")
+        raise ValueError("求平均的列表不能为空")
     try:
         total = sum(numbers)
         return total / len(numbers)
@@ -33,10 +39,14 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError("折扣率必须在0到1之间")
     return price * (1 - rate)
 
 def sqrt_approx(x, guess=1.0, iterations=10):
     logger.info(f"sqrt_approx({x}, guess={guess})")
+    if x < 0:
+        logger.error(f"sqrt_approx x不能为负数: x={x}")
+        raise ValueError("x不能为负数")
     try:
         for i in range(iterations):
             guess = (guess + x / guess) / 2
@@ -64,6 +74,9 @@ def get_user_email(user_id):
 
 def create_user(name, email, role):
     logger.info(f"create_user({name}, {email}, {role})")
+    if role not in ["admin", "user"]:
+        logger.error(f"create_user 角色不合法: role={role}")
+        raise ValueError("角色只能是admin或user")
     new_id = max(USERS.keys()) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
     return new_id
