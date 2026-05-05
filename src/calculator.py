@@ -7,22 +7,20 @@ logger = logging.getLogger(__name__)
 def divide(a, b):
     """除法 — bug: 未处理除零"""
     logger.info(f"divide({a}, {b})")
-    try:
-        return a / b
-    except ZeroDivisionError:
-        logger.exception(f"divide({a}, {b}) 除零异常")
-        raise
+    if b == 0:
+        logger.error(f"divide({a}, {b}) 除数不能为零")
+        raise ValueError("除数不能为零")
+    return a / b
 
 
 def average(numbers):
     """求平均值 — bug: 空列表时崩溃"""
     logger.info(f"average({numbers})")
-    try:
-        total = sum(numbers)
-        return total / len(numbers)
-    except ZeroDivisionError:
-        logger.exception(f"average({numbers}) 空列表求平均异常")
-        raise
+    if not numbers:
+        logger.error(f"average({numbers}) 列表不能为空")
+        raise ValueError("求平均值的列表不能为空")
+    total = sum(numbers)
+    return total / len(numbers)
 
 
 def discount(price, rate):
