@@ -33,6 +33,7 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError(f"折扣率必须在0到1之间，当前值为{rate}")
     return price * (1 - rate)
 
 def sqrt_approx(x, guess=1.0, iterations=10):
@@ -64,7 +65,7 @@ def get_user_email(user_id):
 
 def create_user(name, email, role):
     logger.info(f"create_user({name}, {email}, {role})")
-    new_id = max(USERS.keys()) + 1
+    new_id = max(USERS.keys(), default=0) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
     return new_id
 
@@ -79,11 +80,32 @@ def delete_user(user_id):
         raise
 
 if __name__ == "__main__":
-    divide(10, 0)
-    average([])
-    discount(100, -0.5)
-    sqrt_approx(-1)
-    get_user(999)
-    get_user_email(999)
+    try:
+        divide(10, 0)
+    except Exception:
+        pass
+    try:
+        average([])
+    except Exception:
+        pass
+    try:
+        discount(100, -0.5)
+    except Exception:
+        pass
+    try:
+        sqrt_approx(-1)
+    except Exception:
+        pass
+    try:
+        get_user(999)
+    except Exception:
+        pass
+    try:
+        get_user_email(999)
+    except Exception:
+        pass
     create_user("Test", "test@test.com", "superadmin")
-    delete_user(999)
+    try:
+        delete_user(999)
+    except Exception:
+        pass
