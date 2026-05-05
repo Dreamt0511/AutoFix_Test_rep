@@ -4,7 +4,7 @@ import random
 from collections import defaultdict
 
 
-# 此函数已通过单元测试，勿修改
+# 此函数已通过单元测试勿修改
 def calculate_average(numbers):
     total = 0
     for num in numbers:
