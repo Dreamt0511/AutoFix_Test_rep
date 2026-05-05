@@ -14,11 +14,10 @@ USERS = {
 
 def divide(a, b):
     logger.info(f"divide({a}, {b})")
-    try:
-        return a / b
-    except ZeroDivisionError:
+    if b == 0:
         logger.exception(f"divide({a}, {b}) 除零异常")
-        raise
+        raise ZeroDivisionError("division by zero")
+    return a / b
 
 def average(numbers):
     logger.info(f"average({numbers})")
