@@ -7,11 +7,10 @@ logger = logging.getLogger(__name__)
 def divide(a, b):
     """除法 — bug: 未处理除零"""
     logger.info(f"divide({a}, {b})")
-    try:
-        return a / b
-    except ZeroDivisionError:
-        logger.exception(f"divide({a}, {b}) 除零异常")
-        raise
+    if b == 0:
+        logger.error(f"divide({a}, {b}) 除数不能为0")
+        raise ValueError("除数不能为0")
+    return a / b
 
 
 def average(numbers):
