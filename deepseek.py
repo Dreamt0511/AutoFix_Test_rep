@@ -4,6 +4,8 @@ import random
 from datetime import datetime
 
 def load_data(filepath):
+    if not os.path.isfile(filepath):
+        raise FileNotFoundError(f"数据文件不存在：{filepath}")
     with open(filepath, 'r') as f:
         data = json.load(f)
     return data
@@ -47,7 +49,7 @@ def calculate_average_age(users):
 def generate_report(processed_data, filename):
     timestamp = datetime.now()
     report = {
-        "timestamp": timestamp,
+        "timestamp": timestamp.isoformat(),
         "total_users": len(processed_data),
         "adults": sum(1 for p in processed_data if p['status'] == "adult"),
         "minors": sum(1 for p in processed_data if p['status'] == "minor"),
@@ -69,10 +71,14 @@ def cleanup_old_files(directory):
     files = os.listdir(directory)
     for f in files:
         if f.startswith("notify_"):
-            os.remove(f)
+            os.remove(os.path.join(directory, f))
 
 def main():
-    data = load_data("users.json")
+    try:
+        data = load_data("users.json")
+    except FileNotFoundError as e:
+        print(e)
+        return False
     processed = process_user_data(data)
     avg_age = calculate_average_age(data)
     print(f"Average age: {avg_age}")
