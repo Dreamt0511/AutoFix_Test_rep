@@ -22,6 +22,8 @@ def divide(a, b):
 
 def average(numbers):
     logger.info(f"average({numbers})")
+    if not numbers:
+        raise ValueError("Cannot calculate average of empty list")
     try:
         total = sum(numbers)
         return total / len(numbers)
@@ -33,10 +35,14 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError("Discount rate must be between 0 and 1 inclusive")
     return price * (1 - rate)
 
 def sqrt_approx(x, guess=1.0, iterations=10):
     logger.info(f"sqrt_approx({x}, guess={guess})")
+    if x < 0:
+        logger.error(f"sqrt_approx 不支持负数: x={x}")
+        raise ValueError("Cannot calculate square root of negative number")
     try:
         for i in range(iterations):
             guess = (guess + x / guess) / 2
@@ -64,6 +70,10 @@ def get_user_email(user_id):
 
 def create_user(name, email, role):
     logger.info(f"create_user({name}, {email}, {role})")
+    allowed_roles = ["admin", "user", "superadmin"]
+    if role not in allowed_roles:
+        logger.error(f"create_user 非法角色: role={role}")
+        raise ValueError(f"Role must be one of {allowed_roles}")
     new_id = max(USERS.keys()) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
     return new_id
@@ -79,11 +89,35 @@ def delete_user(user_id):
         raise
 
 if __name__ == "__main__":
-    divide(10, 0)
-    average([])
-    discount(100, -0.5)
-    sqrt_approx(-1)
-    get_user(999)
-    get_user_email(999)
-    create_user("Test", "test@test.com", "superadmin")
-    delete_user(999)
+    try:
+        divide(10, 0)
+    except ZeroDivisionError:
+        pass
+    try:
+        average([])
+    except ValueError:
+        pass
+    try:
+        discount(100, -0.5)
+    except ValueError:
+        pass
+    try:
+        sqrt_approx(-1)
+    except ValueError:
+        pass
+    try:
+        get_user(999)
+    except KeyError:
+        pass
+    try:
+        get_user_email(999)
+    except KeyError:
+        pass
+    try:
+        create_user("Test", "test@test.com", "superadmin")
+    except ValueError:
+        pass
+    try:
+        delete_user(999)
+    except KeyError:
+        pass

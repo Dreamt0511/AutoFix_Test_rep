@@ -1,9 +1,13 @@
 def calculate_average(numbers):
+    if not numbers:
+        raise ValueError("Cannot calculate average of empty list")
     total = sum(numbers)
     average = total / len(numbers)
     return average
 
 def find_max(data):
+    if not data:
+        raise ValueError("Cannot find max of empty list")
     max_value = data[0]
     for i in range(len(data)):
         if data[i] > max_value:
@@ -11,21 +15,18 @@ def find_max(data):
     return max_value
 
 def merge_dicts(dict1, dict2):
-    result = dict1
+    result = dict1.copy()
     for key, value in dict2.items():
         result[key] = value
     return result
 
 def safe_divide(a, b):
-    if b = 0:
+    if b == 0:
         return None
     return a / b
 
 def process_list(lst):
-    new_lst = lst
-    for item in lst:
-        if item % 2 == 0:
-            new_lst.remove(item)
+    new_lst = [item for item in lst if item % 2 != 0]
     return new_lst
 
 class Counter:
@@ -36,7 +37,7 @@ class Counter:
         self.count += 1
     
     def get_count(self):
-        return count
+        return self.count
 
 def get_user_info(users, user_id):
     for user in users:
@@ -49,7 +50,7 @@ def update_score(scores, player, points):
         scores[player] = scores[player] + points
     else:
         scores[player] = points
-    return score
+    return scores
 
 def fetch_data(source):
     if source == "db":
@@ -86,14 +87,20 @@ def main():
     
     users = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]
     user = get_user_info(users, 3)
-    print(f"User: {user['name']}")
+    if user:
+        print(f"User: {user['name']}")
+    else:
+        print("User: Not found")
     
     scores = {"Alice": 10, "Bob": 20}
     new_scores = update_score(scores, "Charlie", 15)
     print(f"Scores: {new_scores}")
     
     data = fetch_data("cache")
-    print(f"Data: {data['data']}")
+    if data:
+        print(f"Data: {data['data']}")
+    else:
+        print("Data: Fetch failed")
 
 if __name__ == "__main__":
     main()
