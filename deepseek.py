@@ -1,53 +1,96 @@
 import os
+import json
 import random
+from datetime import datetime
 
-def buggy_function_1(data):
-    result = []
-    for i in range(len(data)):
-        result.append(data[i] + data[i+1])
-    return result
+def load_data(filepath):
+    with open(filepath, 'r') as f:
+        data = json.load(f)
+    return data
 
-#
-def buggy_function_2(numbers):
+def process_user_data(users):
+    results = []
+    for user in users:
+        if user['active'] == True:
+            age = user['age']
+            if age >= 18:
+                status = "adult"
+            elif age < 18:
+                status = "minor"
+            else:
+                status = "unknown"
+            
+            name = user['name'].upper()
+            email = user['email']
+            
+            if "@" not in email:
+                valid_email = False
+            else:
+                valid_email = True
+            
+            results.append({
+                "name": name,
+                "age": age,
+                "email_valid": valid_email,
+                "status": status
+            })
+    return results
+
+def calculate_average_age(users):
     total = 0
-    for i in numbers:
-        total += i
-    return total / len(numbers)
+    count = 0
+    for user in users:
+        total += user['age']
+        count += 1
+    return total / count
 
-def buggy_function_3():
-    file = open("temp.txt", "w")
-    file.write("Hello")
-    return file
+def generate_report(processed_data, filename):
+    timestamp = datetime.now()
+    report = {
+        "timestamp": timestamp,
+        "total_users": len(processed_data),
+        "adults": sum(1 for p in processed_data if p['status'] == "adult"),
+        "minors": sum(1 for p in processed_data if p['status'] == "minor"),
+        "invalid_emails": sum(1 for p in processed_data if not p['email_valid'])
+    }
+    
+    with open(filename + ".txt", "w") as f:
+        f.write(json.dumps(report))
+    
+    print(f"Report saved to {filename}")
 
-def buggy_function_4(x, y):
-    if x > 0:
-        return x * y
-    elif x < 0:
-        return x / y
-    else:
-        return y
+def send_notification(users):
+    for user in users:
+        if random.randint(1, 10) > 7:
+            print(f"Sending notification to {user['email']}")
+            os.system(f"echo 'Hello {user['name']}' > /tmp/notify_{user['id']}.txt")
 
-def buggy_function_5(data_dict):
-    for key in data_dict:
-        if data_dict[key] == "error":
-            del data_dict[key]
-    return data_dict
+def cleanup_old_files(directory):
+    files = os.listdir(directory)
+    for f in files:
+        if f.startswith("notify_"):
+            os.remove(f)
+
+def main():
+    data = load_data("users.json")
+    processed = process_user_data(data)
+    avg_age = calculate_average_age(data)
+    print(f"Average age: {avg_age}")
+    
+    generate_report(processed, "report_2024")
+    
+    send_notification(data)
+    cleanup_old_files("/tmp")
+    
+    for p in processed:
+        if p['age'] > 100:
+            print("Centenarian detected!")
+    
+    if len(processed) > 0:
+        first_user = processed[0]
+        print(f"First user: {first_user['name']} - {first_user['status']}")
+    
+    return True
 
 if __name__ == "__main__":
-    print("测试Bug 1:")
-    print(buggy_function_1([1, 2, 3]))
-
-    print("\n测试Bug 2:")
-    print(buggy_function_2([]))
-
-    print("\n测试Bug 3:")
-    f = buggy_function_3()
-    print(f.read())
-    f.close()
-
-    print("\n测试Bug 4:")
-    print(buggy_function_4(0, 5))
-
-    print("\n测试Bug 5:")
-    test_dict = {"a": "ok", "b": "error", "c": "ok"}
-    print(buggy_function_5(test_dict))
+    main()
