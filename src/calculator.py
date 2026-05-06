@@ -17,6 +17,9 @@ def divide(a, b):
 def average(numbers):
     """求平均值 — bug: 空列表时崩溃"""
     logger.info(f"average({numbers})")
+    if not numbers:
+        logger.exception(f"average({numbers}) 空列表求平均异常")
+        raise ValueError("Cannot calculate average of empty list")
     try:
         total = sum(numbers)
         return total / len(numbers)
@@ -30,12 +33,16 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError(f"Discount rate must be between 0 and 1, got {rate}")
     return price * (1 - rate)
 
 
 def sqrt_approx(x, guess=1.0, iterations=10):
     """牛顿法求平方根 — bug: 未处理负数输入"""
     logger.info(f"sqrt_approx({x}, guess={guess})")
+    if x < 0:
+        logger.error(f"sqrt_approx({x}) 负数输入无法计算平方根")
+        raise ValueError(f"Square root input x must be non-negative, got {x}")
     try:
         for i in range(iterations):
             guess = (guess + x / guess) / 2
