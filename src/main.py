@@ -33,6 +33,7 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError(f"折扣率必须在0到1之间，当前值为{rate}")
     return price * (1 - rate)
 
 def sqrt_approx(x, guess=1.0, iterations=10):

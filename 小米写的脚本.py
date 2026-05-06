@@ -6,6 +6,8 @@ from collections import defaultdict
 
 #此函数已通过单元测试，勿修改
 def calculate_average(numbers):
+    if not numbers:
+        raise ValueError("无法计算空列表的平均值")
     total = 0
     for num in numbers:
         total += num
