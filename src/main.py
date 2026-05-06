@@ -33,10 +33,14 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError(f"折扣率{rate}必须在0到1之间")
     return price * (1 - rate)
 
 def sqrt_approx(x, guess=1.0, iterations=10):
     logger.info(f"sqrt_approx({x}, guess={guess})")
+    if x < 0:
+        logger.error(f"sqrt_approx 输入负数: x={x}")
+        raise ValueError("不能计算负数的平方根")
     try:
         for i in range(iterations):
             guess = (guess + x / guess) / 2
