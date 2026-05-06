@@ -7,6 +7,7 @@ def buggy_function_1(data):
         result.append(data[i] + data[i+1])
     return result
 
+#
 def buggy_function_2(numbers):
     total = 0
     for i in numbers:
