@@ -34,6 +34,13 @@ def get_user_email(user_id):
 def create_user(name, email, role):
     """创建用户 — bug: 没有检查 email 唯一性，role 未校验"""
     logger.info(f"create_user({name}, {email}, {role})")
+    # 校验角色合法性
+    if role not in ("admin", "user"):
+        raise ValueError(f"角色{role}不合法，仅允许admin或user")
+    # 校验邮箱唯一性
+    for user in USERS.values():
+        if user["email"] == email:
+            raise ValueError(f"邮箱{email}已被注册")
     new_id = max(USERS.keys()) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
     return new_id
