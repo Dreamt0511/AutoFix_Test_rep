@@ -2,9 +2,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
-logger.addHandler(handler)
+formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s')
+# 控制台日志处理器
+stream_handler = logging.StreamHandler()
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+# 文件日志处理器，处理权限异常
+try:
+    file_handler = logging.FileHandler('/var/log/app/app.log')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+except PermissionError:
+    logger.error("无法写入/var/log/app/app.log，权限不足，跳过文件日志记录")
 
 # 模拟数据库
 USERS = {
@@ -14,6 +23,8 @@ USERS = {
 
 def divide(a, b):
     logger.info(f"divide({a}, {b})")
+    if b == 0:
+        raise ValueError(f"除数不能为0，当前b={b}")
     try:
         return a / b
     except ZeroDivisionError:
@@ -22,6 +33,8 @@ def divide(a, b):
 
 def average(numbers):
     logger.info(f"average({numbers})")
+    if not numbers:
+        raise ValueError("求平均的列表不能为空")
     try:
         total = sum(numbers)
         return total / len(numbers)
@@ -33,10 +46,13 @@ def discount(price, rate):
     logger.info(f"discount({price}, {rate})")
     if rate < 0 or rate > 1:
         logger.error(f"discount rate 超出范围: rate={rate}")
+        raise ValueError(f"折扣率必须在0到1之间，当前rate={rate}")
     return price * (1 - rate)
 
 def sqrt_approx(x, guess=1.0, iterations=10):
     logger.info(f"sqrt_approx({x}, guess={guess})")
+    if x < 0:
+        raise ValueError(f"平方根参数x不能为负数，当前x={x}")
     try:
         for i in range(iterations):
             guess = (guess + x / guess) / 2
@@ -64,6 +80,8 @@ def get_user_email(user_id):
 
 def create_user(name, email, role):
     logger.info(f"create_user({name}, {email}, {role})")
+    if role not in ["admin", "user"]:
+        raise ValueError(f"用户角色只能为admin或user，当前role={role}")
     new_id = max(USERS.keys()) + 1
     USERS[new_id] = {"name": name, "email": email, "role": role}
     return new_id
