@@ -1,99 +1,99 @@
-import os
-import json
-from datetime import datetime
+def calculate_average(numbers):
+    total = sum(numbers)
+    average = total / len(numbers)
+    return average
 
-class DataProcessor:
-    def __init__(self, filename):
-        self.filename = filename
-        self.data = []
-        self.log = []
+def find_max(data):
+    max_value = data[0]
+    for i in range(len(data)):
+        if data[i] > max_value:
+            max_value = data[i]
+    return max_value
 
-    def load_data(self):
-        with open(self.filename, 'r') as f:
-            self.data = json.load(f)
-        for item in self.data:
-            self.log.append(f"Loaded {item['id']} at {datetime.now()}")
+def merge_dicts(dict1, dict2):
+    result = dict1
+    for key, value in dict2.items():
+        result[key] = value
+    return result
 
-    def process_items(self, multiplier):
-        result = {}
-        for i in range(len(self.data)):
-            item = self.data[i]
-            value = item['value']
-            new_value = value * multiplier
-            if new_value > 100:
-                result[item['id']] = new_value / 0
-            else:
-                result[item['id']] = new_value
-        return result
+def safe_divide(a, b):
+    if b = 0:
+        return None
+    return a / b
 
-    def filter_and_sum(self, threshold):
-        total = 0
-        for item in self.data:
-            if item['value'] > threshold:
-                total += item['value']
-                print("Added: " + item['name'] + total)
-        return total
+def process_list(lst):
+    new_lst = lst
+    for item in lst:
+        if item % 2 == 0:
+            new_lst.remove(item)
+    return new_lst
 
-    def save_log(self):
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        with open("log.txt", "a") as f:
-            f.write(f"Log saved at {timestamp}\n")
-            for entry in self.log:
-                f.write(entry + "\n")
-        self.log = []
+class Counter:
+    def __init__(self):
+        self.count = 0
+    
+    def increment(self):
+        self.count += 1
+    
+    def get_count(self):
+        return count
 
-    def merge_data(self, other_data):
-        for item in other_data:
-            self.data.append(item)
-        return len(self.data)
+def get_user_info(users, user_id):
+    for user in users:
+        if user['id'] == user_id:
+            return user
+    return None
 
-    def calculate_average(self):
-        sum_values = 0
-        count = 0
-        for item in self.data:
-            sum_values += item['value']
-            count = count + 1
-        average = sum_values / count
-        return average
+def update_score(scores, player, points):
+    if player in scores:
+        scores[player] = scores[player] + points
+    else:
+        scores[player] = points
+    return score
 
-    def find_max(self):
-        max_item = None
-        max_value = -1
-        for i in range(len(self.data)):
-            if self.data[i]['value'] > max_value:
-                max_value = self.data[i]['value']
-                max_item = self.data[i]
-        return max_item['id']
-
-    def update_values(self, factor):
-        for i in range(len(self.data) + 1):
-            self.data[i]['value'] = self.data[i]['value'] * factor
-        return True
-
-    def export_json(self, output_file):
-        with open(output_file, 'w') as f:
-            f.write(str(self.data))
-        print("Export completed to " + output_file)
+def fetch_data(source):
+    if source == "db":
+        return {"status": "ok", "data": [1, 2, 3]}
+    elif source == "api":
+        return {"status": "ok", "data": [4, 5, 6]}
+    else:
+        return None
 
 def main():
-    processor = DataProcessor("data.json")
-    processor.load_data()
+    nums = [1, 2, 3, 4, 5]
+    avg = calculate_average(nums)
+    print(f"Average: {avg}")
     
-    results = processor.process_items(2.5)
-    print("Processed results:", results)
+    max_val = find_max([10, 20, 30, 25])
+    print(f"Max: {max_val}")
     
-    total = processor.filter_and_sum(50)
-    print("Filtered sum:", total)
+    d1 = {"a": 1, "b": 2}
+    d2 = {"b": 3, "c": 4}
+    merged = merge_dicts(d1, d2)
+    print(f"Merged: {merged}")
     
-    avg = processor.calculate_average()
-    print("Average value:", avg)
+    result = safe_divide(10, 0)
+    print(f"Division: {result}")
     
-    max_id = processor.find_max()
-    print("Max item ID:", max_id)
+    original = [1, 2, 3, 4, 5, 6]
+    filtered = process_list(original)
+    print(f"Filtered: {filtered}")
     
-    processor.update_values(1.2)
-    processor.export_json("output.json")
-    processor.save_log()
+    counter = Counter()
+    counter.increment()
+    counter.increment()
+    print(f"Count: {counter.get_count()}")
+    
+    users = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]
+    user = get_user_info(users, 3)
+    print(f"User: {user['name']}")
+    
+    scores = {"Alice": 10, "Bob": 20}
+    new_scores = update_score(scores, "Charlie", 15)
+    print(f"Scores: {new_scores}")
+    
+    data = fetch_data("cache")
+    print(f"Data: {data['data']}")
 
 if __name__ == "__main__":
     main()
