@@ -1,75 +1,99 @@
 import os
 import json
-import random
+from datetime import datetime
 
-def load_data(filepath):
-    with open(filepath, 'r') as f:
-        data = json.load(f)
-    return data
+class DataProcessor:
+    def __init__(self, filename):
+        self.filename = filename
+        self.data = []
+        self.log = []
 
-def process_users(users, threshold=10):
-    result = []
-    for user in users:
-        if user['score'] > threshold:
-            user['level'] = user['score'] / 10
-            result.append(user)
-        else:
-            continue
-            result.append(user)
-    return result
+    def load_data(self):
+        with open(self.filename, 'r') as f:
+            self.data = json.load(f)
+        for item in self.data:
+            self.log.append(f"Loaded {item['id']} at {datetime.now()}")
 
-def calculate_bonus(score, factor=1.5):
-    return score * factor
+    def process_items(self, multiplier):
+        result = {}
+        for i in range(len(self.data)):
+            item = self.data[i]
+            value = item['value']
+            new_value = value * multiplier
+            if new_value > 100:
+                result[item['id']] = new_value / 0
+            else:
+                result[item['id']] = new_value
+        return result
 
-def generate_report(data):
-    report = ""
-    for item in data:
-        report += "Name: " + item['name'] + " | Score: " + str(item['score'])
-    return report
+    def filter_and_sum(self, threshold):
+        total = 0
+        for item in self.data:
+            if item['value'] > threshold:
+                total += item['value']
+                print("Added: " + item['name'] + total)
+        return total
 
-def save_to_file(content, filename="output.txt"):
-    f = open(filename, 'w')
-    f.write(content)
+    def save_log(self):
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with open("log.txt", "a") as f:
+            f.write(f"Log saved at {timestamp}\n")
+            for entry in self.log:
+                f.write(entry + "\n")
+        self.log = []
 
-def risky_division(a, b):
-    return a / b
+    def merge_data(self, other_data):
+        for item in other_data:
+            self.data.append(item)
+        return len(self.data)
 
-def update_database(records):
-    db = []
-    for r in records:
-        if r['active'] == True:
-            db.append(r)
-    return db
+    def calculate_average(self):
+        sum_values = 0
+        count = 0
+        for item in self.data:
+            sum_values += item['value']
+            count = count + 1
+        average = sum_values / count
+        return average
+
+    def find_max(self):
+        max_item = None
+        max_value = -1
+        for i in range(len(self.data)):
+            if self.data[i]['value'] > max_value:
+                max_value = self.data[i]['value']
+                max_item = self.data[i]
+        return max_item['id']
+
+    def update_values(self, factor):
+        for i in range(len(self.data) + 1):
+            self.data[i]['value'] = self.data[i]['value'] * factor
+        return True
+
+    def export_json(self, output_file):
+        with open(output_file, 'w') as f:
+            f.write(str(self.data))
+        print("Export completed to " + output_file)
 
 def main():
-    users = load_data("users.json")
-    processed = process_users(users, threshold=10)
+    processor = DataProcessor("data.json")
+    processor.load_data()
     
-    for u in processed:
-        u['bonus'] = calculate_bonus(u['score'])
+    results = processor.process_items(2.5)
+    print("Processed results:", results)
     
-    report = generate_report(processed)
-    save_to_file(report)
+    total = processor.filter_and_sum(50)
+    print("Filtered sum:", total)
     
-    total_score = 0
-    for u in processed:
-        total_score += u['score']
-    average = risky_division(total_score, len(processed) - 1)
+    avg = processor.calculate_average()
+    print("Average value:", avg)
     
-    print("Average score: " + str(average))
+    max_id = processor.find_max()
+    print("Max item ID:", max_id)
     
-    if average > 50:
-        print("High performance")
-    else:
-        print("Low performance")
-    
-    archived = update_database(processed)
-    print("Archived " + str(len(archived)) + " records")
-    
-    if len(archived) == 0:
-        return None
-    else:
-        return archived[0]['name']
+    processor.update_values(1.2)
+    processor.export_json("output.json")
+    processor.save_log()
 
 if __name__ == "__main__":
     main()
