@@ -1,0 +1,12 @@
+# Pocket-Agent Python Dependencies
+# These are the seed requirements. The real agent (from GitHub)
+# may have additional dependencies.
+
+# HTTP client for API calls
+httpx>=0.25.0
+
+# OpenAI-compatible client
+openai>=1.0.0
+
+# JSON handling
+pydantic>=2.0.0

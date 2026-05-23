@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pocket-Agent</string>
+    <string name="home_title">Pocket-Agent</string>
+    <string name="home_subtitle">你的手机 AI 操作员</string>
+    <string name="setup_title">API 配置</string>
+    <string name="setup_description">配置 API key 后，用自然语言让 AI 帮你操控手机</string>
+    <string name="task_title">任务执行</string>
+    <string name="terminal_title">终端</string>
+    <string name="input_hint">告诉 AI 你想做什么...</string>
+    <string name="btn_send">发送</string>
+    <string name="btn_stop">停止</string>
+    <string name="btn_configure">开始配置</string>
+    <string name="btn_start_task">开始任务</string>
+    <string name="btn_save">保存配置</string>
+    <string name="label_api_url">API Base URL</string>
+    <string name="label_model">模型名称</string>
+    <string name="label_api_key">API Key</string>
+    <string name="status_ready">就绪</string>
+    <string name="status_planning">规划中</string>
+    <string name="status_executing">执行中</string>
+    <string name="status_done">完成</string>
+    <string name="status_error">失败</string>
+    <string name="termux_starting">正在初始化 Termux 环境...</string>
+    <string name="termux_ready">Termux 环境就绪</string>
+    <string name="agent_updating">正在检查更新...</string>
+    <string name="agent_updated">Agent 已更新到最新版本</string>
+    <string name="agent_offline">离线模式，使用本地代码</string>
+</resources>

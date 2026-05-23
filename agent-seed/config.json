@@ -1,0 +1,11 @@
+{
+    "app_name": "Pocket-Agent",
+    "version": "1.0.0",
+    "mcp_host": "127.0.0.1",
+    "mcp_port": 9876,
+    "api_base_url": "https://api.openai.com/v1",
+    "model_name": "gpt-4o",
+    "max_retries": 3,
+    "step_timeout": 30,
+    "log_level": "INFO"
+}
