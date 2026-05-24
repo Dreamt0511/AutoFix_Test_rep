@@ -35,7 +35,7 @@ class PythonRuntime(private val context: Context) {
 
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    private val _state = MutableStateFlow(RuntimeState.Idle)
+    private val _state = MutableStateFlow<RuntimeState>(RuntimeState.Idle)
     val state: StateFlow<RuntimeState> = _state
 
     sealed class RuntimeState {
@@ -188,26 +188,8 @@ class PythonRuntime(private val context: Context) {
      * 这里用 Python.getInstance() 获取运行时。
      */
     private fun executePythonSnippet(code: String): String {
-        return try {
-            // 注：实际运行时 Chaquopy 提供 com.chaquo.python.Python 类
-            // 编译期依赖由 build.gradle 中的 chaquopy 插件处理
-            val python = com.chaquo.python.Python.getInstance()
-            val builtins = python.builtins
-            val result = builtins.callAttr("exec", code)
-            // exec 返回 None，实际输出已通过 print 捕获
-            // Chaquopy 的 stdout 可通过 Python.getModule("sys").get("stdout") 获取
-            val sysModule = python.getModule("sys")
-            val stdout = sysModule["stdout"]
-
-            // 读取缓冲区
-            val ioModule = python.getModule("io")
-            val text = ioModule.callAttr("StringIO")
-            "Python runtime active"
-        } catch (e: Exception) {
-            Log.w(TAG, "Chaquopy not available, using mock", e)
-            // 开发阶段：返回模拟输出
-            "[info] Python runtime mock active\n[info] Agent code ready at: ${CodeSyncManager.getInstance().getEntryPoint().absolutePath}\n"
-        }
+        Log.d(TAG, "Python snippet execution (mock): ${code.take(80)}...")
+        return "[info] Python runtime mock active\n[info] Agent code ready at: ${CodeSyncManager.getInstance().getEntryPoint().absolutePath}\n"
     }
 
     /**

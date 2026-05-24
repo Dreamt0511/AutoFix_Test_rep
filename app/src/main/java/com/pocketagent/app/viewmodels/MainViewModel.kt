@@ -24,7 +24,7 @@ data class MainUiState(
     val lastUpdate: String? = null
 )
 
-class MainViewModel @Inject constructor(
+class MainViewModel(
     private val agentBridge: AgentBridge,
     private val gitUpdater: GitUpdater,
     private val settingsRepository: SettingsRepository
