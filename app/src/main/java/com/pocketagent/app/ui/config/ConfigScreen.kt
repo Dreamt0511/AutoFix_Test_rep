@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
  * 4. 本地/云端环境切换
  * 5. Termux API 配置
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigScreen(navController: NavController) {
     val scope = rememberCoroutineScope()
@@ -203,7 +204,7 @@ private fun loadConfigs(): List<ConfigItem> {
             key = "LLM_API_KEY_LOCAL",
             value = "dummy",
             description = "本地 API 密钥 (通常为 dummy)",
-            group = "主 Agent 模型配置 (本地)",
+            group = "�� Agent 模型配置 (本地)",
             type = ConfigType.TEXT
         ),
         ConfigItem(
