@@ -47,12 +47,12 @@
 | `compileSdk` | 33 | 编译 SDK 33 |
 | `SYSTEM_ALERT_WINDOW` 权限 | AndroidManifest.xml | 悬浮窗必需 |
 | `FOREGROUND_SERVICE` 权限 | AndroidManifest.xml | 后台服务必需 |
-| `BIND_ACCESSIBILITY_SERVICE` | AndroidManifest.xml | 无障碍服务 |
+
+> **架构说明**：Pocket Agent 不内置无障碍服务。手机操控（触控/无障碍）由独立的 [NeuralBridge MCP](https://github.com/dondetir/NeuralBridge_mcp) 服务完成，本项目通过 MCP 协议与之通信。
 | `RECORD_AUDIO` 权限 | AndroidManifest.xml | 语音输入 |
 | `INTERNET` 权限 | AndroidManifest.xml | 网络通信 |
 | `OverlayService` 注册 | AndroidManifest.xml | 悬浮窗服务 |
 | `AgentService` 注册 | AndroidManifest.xml | Agent 后台服务 |
-| `AccessibilityService` 注册 | AndroidManifest.xml | 无障碍服务 |
 
 ---
 
@@ -116,10 +116,9 @@ adb install app\build\outputs\apk\debug\app-debug.apk
 ### 安装后首次启动
 
 1. 授权「显示在其他应用上层」权限
-2. 授权「无障碍服务」权限
-3. 授权「录音」权限（语音输入）
-4. 进入「配置」页面，填写 API 地址和 Key
-5. 主页测试 Agent 对话
+2. 授权「录音」权限（语音输入）
+3. 进入「配置」页面，填写 MCP 服务地址（NeuralBridge）及 API Key
+4. 主页测试 Agent 对话
 
 ---
 

@@ -151,6 +151,6 @@ app/build/outputs/apk/debug/app-debug.apk
 - **全局悬浮窗**：系统级悬浮球 + 终端卡片，退出 App 后仍可监控 Agent 执行
 - **守护进程**：后台服务保活，任务队列调度
 - **语音输入**：内置语音识别
-- **无障碍服务**：支持操控其他 App
+- **MCP 联动**：通过独立的 [NeuralBridge MCP](https://github.com/dondetir/NeuralBridge_mcp) 服务操控手机（无障碍/触控），本项目不内置无障碍实现
 - **动态代码加载**：主仓库更新后 App 自动拉取最新 Python Agent 代码
 - **配置管理**：支持主/子 Agent 模型配置，云端 API + 本地 llama-server
