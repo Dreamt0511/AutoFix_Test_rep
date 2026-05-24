@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
  * 3. 系统信息查询
  * 4. 命令历史记录
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TerminalScreen(navController: NavController) {
     val scope = rememberCoroutineScope()

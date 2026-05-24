@@ -1,6 +1,7 @@
 package com.pocketagent.app.ui.screens.onboarding
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.navigation.NavController
 import com.pocketagent.app.R
 import com.pocketagent.app.ui.theme.PocketAgentTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
     navController: NavController,

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.pocketagent.app.bridge.AgentDaemon
 import com.pocketagent.app.ui.theme.PocketAgentTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TerminalScreen() {
     val daemonState by AgentDaemon.daemonState.collectAsState()
