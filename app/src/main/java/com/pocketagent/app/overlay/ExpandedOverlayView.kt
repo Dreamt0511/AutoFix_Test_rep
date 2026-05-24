@@ -52,9 +52,9 @@ class ExpandedOverlayView(
         // 整体背景
         background = GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
-            cornerRadius = dp(12f)
+            cornerRadius = dp(12).toFloat()
             setColor(Color.parseColor("#E61A1A2E"))
-            setStroke(dp(0.5f), Color.parseColor("#44FFFFFF"))
+            setStroke(dp(0.5f).toInt(), Color.parseColor("#44FFFFFF"))
         }
 
         layoutParams = ViewGroup.LayoutParams(
@@ -70,7 +70,7 @@ class ExpandedOverlayView(
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 cornerRadii = floatArrayOf(
-                    dp(12f), dp(12f), dp(12f), dp(12f), // top
+                    dp(12).toFloat(), dp(12).toFloat(), dp(12).toFloat(), dp(12).toFloat(), // top
                     0f, 0f, 0f, 0f                      // bottom
                 )
                 setColor(Color.parseColor("#331A1A2E"))

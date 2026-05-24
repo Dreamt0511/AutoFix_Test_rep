@@ -3,6 +3,7 @@ package com.pocketagent.app.core
 import android.content.Context
 import android.util.Log
 import java.io.File
+import com.pocketagent.app.overlay.StreamBridge
 
 /**
  * Python 运行时管理 — 预留扩展接口
@@ -17,7 +18,7 @@ object PythonRuntime {
     private var initialized = false
 
     fun bootstrap(context: Context) {
-        runtimeDir = File(context.filesDir, CodeSyncManager.RUNTIME_DIR)
+        runtimeDir = File(context.filesDir, "app_python_runtime")
         initialized = true
         Log.i(TAG, "Python runtime bootstrapped (stub). Runtime dir: ${runtimeDir?.absolutePath}")
     }

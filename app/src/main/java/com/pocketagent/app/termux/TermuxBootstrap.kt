@@ -8,8 +8,10 @@ import android.util.Log
 object TermuxBootstrap {
     private const val TAG = "TermuxBootstrap"
 
+    val termuxRoot: String
+        get() = "/data/data/com.termux/files"
     val termuxUsr: String
-        get() = "/data/data/com.termux/files/usr"
+        get() = "$termuxRoot/usr"
 
     val isReady: Boolean
         get() {

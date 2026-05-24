@@ -1,5 +1,6 @@
 package com.pocketagent.app.data
 
+import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -16,7 +17,7 @@ data class Settings(
 )
 
 class SettingsRepository(
-    private val dataStore: DataStore
+    private val dataStore: DataStore<Preferences>
 ) {
     companion object {
         private val LLM_BASE_URL = stringPreferencesKey("llm_base_url")

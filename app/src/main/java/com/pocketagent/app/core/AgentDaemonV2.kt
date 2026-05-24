@@ -3,7 +3,11 @@ package com.pocketagent.app.core
 import android.content.Context
 import android.util.Log
 import com.pocketagent.app.overlay.StreamBridge
-import com.pocketagent.app.update.*
+import com.pocketagent.app.update.CodeSyncManager
+import com.pocketagent.app.update.PythonRuntime
+import com.pocketagent.app.update.SyncResult
+import com.pocketagent.app.update.TaskResult
+import com.pocketagent.app.update.ActionResult
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -33,7 +33,7 @@ object AppBootstrapper {
     /**
      * 初始化所有子系统（Application.onCreate 中调用）
      */
-    fun init(context: Context, repoUrl: String) {
+    fun init(context: Context, repoUrl: String = "https://github.com/pocketagent/pocket-agent") {
         this.repoUrl = repoUrl
 
         // 1. 悬浮窗管理器

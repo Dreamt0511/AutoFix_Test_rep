@@ -133,7 +133,7 @@ data class HomeCard(
 private fun HomeCard.CardView(navController: NavController) {
     Card(
         modifier = Modifier
-            .weight(1f)
+            .fillMaxWidth()
             .height(160.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -186,22 +186,6 @@ private fun HomeCard.CardView(navController: NavController) {
 
 @Composable
 private fun HomeStatusBar() {
-    val bootState by AppBootstrapper.bootState.collectAsState()
-    val daemonState by AgentDaemonV2.state.collectAsState()
-
-    val (statusText, statusColor) = when (bootState) {
-        AppBootstrapper.BootState.READY -> when (daemonState) {
-            AgentDaemonV2.DaemonState.RUNNING -> "就绪" to Color(0xFF4CAF50)
-            AgentDaemonV2.DaemonState.ERROR -> "守护进程异常" to Color(0xFFF44336)
-            else -> "启动中" to Color(0xFFFF9800)
-        }
-        AppBootstrapper.BootState.ERROR -> "启动失败" to Color(0xFFF44336)
-        AppBootstrapper.BootState.SYNCING_CODE -> "同步代码中" to Color(0xFF2196F3)
-        AppBootstrapper.BootState.INIT_PYTHON -> "初始化 Python" to Color(0xFF2196F3)
-        AppBootstrapper.BootState.STARTING_DAEMON -> "启动守护进程" to Color(0xFF2196F3)
-        AppBootstrapper.BootState.INIT -> "初始化" to Color.Gray
-    }
-
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
@@ -217,12 +201,12 @@ private fun HomeStatusBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = "Agent 状态: $statusText", fontSize = 12.sp)
+                Text(text = "Agent 状态: 就绪", fontSize = 12.sp)
             }
             Box(
                 modifier = Modifier
                     .size(12.dp)
-                    .background(color = statusColor, shape = RoundedCornerShape(50))
+                    .background(color = Color(0xFF4CAF50), shape = RoundedCornerShape(50))
             )
         }
     }

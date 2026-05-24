@@ -28,6 +28,7 @@ import java.util.*
  * 3. 执行状态指示
  * 4. 历史记录
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(navController: NavController) {
     val scope = rememberCoroutineScope()

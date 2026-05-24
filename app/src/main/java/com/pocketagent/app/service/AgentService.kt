@@ -115,7 +115,7 @@ class AgentService : Service() {
                 else
                     "后台服务运行中"
             )
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentIntent(pendingIntent)
             .addAction(
                 android.R.drawable.ic_media_pause,

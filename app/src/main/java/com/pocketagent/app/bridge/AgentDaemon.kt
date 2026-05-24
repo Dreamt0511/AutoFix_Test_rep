@@ -2,7 +2,6 @@ package com.pocketagent.app.bridge
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Process
 import androidx.core.content.edit
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
