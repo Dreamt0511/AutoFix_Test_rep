@@ -14,6 +14,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.pocketagent.app.core.ConfigManager
 import com.pocketagent.app.core.AppBootstrapper
 import kotlinx.coroutines.launch
 

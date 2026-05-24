@@ -1,5 +1,6 @@
 package com.pocketagent.app.ui.overlay
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -24,6 +25,7 @@ import kotlinx.coroutines.launch
  * 3. 实时状态监控
  * 4. 流式输出查看
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OverlayScreen(navController: NavController) {
     val scope = rememberCoroutineScope()

@@ -21,6 +21,7 @@ import com.pocketagent.app.service.TaskQueueManager.TaskStatus
 import com.pocketagent.app.ui.theme.PocketAgentTheme
 import kotlinx.coroutines.flow.first
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(
     navController: NavController,

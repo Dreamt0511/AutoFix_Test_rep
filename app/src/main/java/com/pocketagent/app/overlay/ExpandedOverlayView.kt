@@ -138,7 +138,7 @@ class ExpandedOverlayView(
             setTextColor(Color.parseColor("#CCE0E0E0"))
             textSize = 11f
             typeface = android.graphics.Typeface.MONOSPACE
-            lineSpacing = dp(2f), 1f
+            setLineSpacing(2f, 1f)
             text = "$ Pocket Agent 就绪\n"
         }
         scrollView.addView(terminalText)
