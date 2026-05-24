@@ -236,6 +236,23 @@ class CodeSyncManager(private val context: Context) {
     fun isCodeReady(): Boolean {
         return getEntryPoint().exists()
     }
+
+    /** 确保种子代码存在 — 无网络时使用内置代码 */
+    fun ensureSeedCode(): Boolean {
+        val entry = getEntryPoint()
+        if (entry.exists()) return true
+        // 创建空的入口脚本作为种子
+        val runtimeDir = getRuntimeDir()
+        if (!runtimeDir.exists()) runtimeDir.mkdirs()
+        try {
+            entry.writeText("# Pocket Agent Seed Entry\nprint('{\"type\": \"ready\"}')\n")
+            Log.i(TAG, "Seed code created at ${entry.absolutePath}")
+            return true
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to create seed code", e)
+            return false
+        }
+    }
 }
 
 // ─── 同步结果 ────────────────────────────────────

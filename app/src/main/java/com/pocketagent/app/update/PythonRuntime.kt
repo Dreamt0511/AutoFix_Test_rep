@@ -5,6 +5,7 @@ import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import org.json.JSONObject
 
 /**
  * Python 运行时管理器 — 在 APK 内执行动态加载的主仓库 Python 代码
@@ -275,7 +276,11 @@ class PythonRuntime(private val context: Context) {
 
     private fun jsonToMap(json: JSONObject): Map<String, String> {
         val map = mutableMapOf<String, String>()
-        json.keys().forEach { key -> map[key] = json.optString(key, "") }
+        val keys = json.keys()
+        while (keys.hasNext()) {
+            val key = keys.next()
+            map[key] = json.optString(key, "")
+        }
         return map
     }
 
