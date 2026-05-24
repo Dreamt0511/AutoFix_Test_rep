@@ -1,0 +1,213 @@
+package com.pocketagent.app.ui.chat
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.pocketagent.app.core.AppBootstrapper
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
+
+/**
+ * 对话页面 - 主 Agent 功能入口
+ * 
+ * 功能:
+ * 1. 自然语言对话 (执行手机操控、问答、任务规划)
+ * 2. 流式输出显示
+ * 3. 执行状态指示
+ * 4. 历史记录
+ */
+@Composable
+fun ChatScreen(navController: NavController) {
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+    var inputText by remember { mutableStateOf("") }
+    var isProcessing by remember { mutableStateOf(false) }
+    var messages by remember { mutableStateOf<List<ChatMessage>>(emptyList()) }
+
+    // 监听流式输出
+    LaunchedEffect(Unit) {
+        // TODO: 监听 StreamBridge 输出
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("对话") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Text("←")
+                    }
+                },
+                actions = {
+                    if (isProcessing) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            ChatInputBar(
+                inputText = inputText,
+                onInputChange = { inputText = it },
+                onSend = {
+                    if (inputText.isNotBlank() && !isProcessing) {
+                        scope.launch {
+                            isProcessing = true
+                            messages = messages + ChatMessage(
+                                text = inputText,
+                                isUser = true,
+                                timestamp = System.currentTimeMillis()
+                            )
+                            
+                            // 执行指令
+                            val result = AppBootstrapper.executeCommand(inputText)
+                            
+                            messages = messages + ChatMessage(
+                                text = result.message,
+                                isUser = false,
+                                timestamp = System.currentTimeMillis()
+                            )
+                            
+                            inputText = ""
+                            isProcessing = false
+                            
+                            // 滚动到底部
+                            listState.animateScrollToItem(messages.size - 1)
+                        }
+                    }
+                },
+                enabled = !isProcessing
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            state = listState,
+            reverseLayout = false,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(messages) { message ->
+                ChatMessageItem(message)
+            }
+        }
+    }
+}
+
+// ─── 消息模型 ───────────────────────────────────
+
+data class ChatMessage(
+    val text: String,
+    val isUser: Boolean,
+    val timestamp: Long
+)
+
+// ─── 消息气泡 ───────────────────────────────────
+
+@Composable
+private fun ChatMessageItem(message: ChatMessage) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 4.dp),
+        horizontalArrangement = if (message.isUser) Arrangement.End else Arrangement.Start
+    ) {
+        Card(
+            shape = RoundedCornerShape(
+                topStart = 16.dp,
+                topEnd = 16.dp,
+                bottomStart = if (message.isUser) 16.dp else 4.dp,
+                bottomEnd = if (message.isUser) 4.dp else 16.dp
+            ),
+            colors = CardDefaults.cardColors(
+                containerColor = if (message.isUser) 
+                    MaterialTheme.colorScheme.primary 
+                else 
+                    MaterialTheme.colorScheme.surfaceVariant
+            )
+        ) {
+            Column(
+                modifier = Modifier.padding(12.dp)
+            ) {
+                Text(
+                    text = message.text,
+                    color = if (message.isUser) Color.White else MaterialTheme.colorScheme.onSurface,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = formatTime(message.timestamp),
+                    fontSize = 10.sp,
+                    color = if (message.isUser) Color.White.copy(alpha = 0.7f) 
+                           else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+        }
+    }
+}
+
+// ─── 输入栏 ────────────────────────────────────
+
+@Composable
+private fun ChatInputBar(
+    inputText: String,
+    onInputChange: (String) -> Unit,
+    onSend: () -> Unit,
+    enabled: Boolean
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        tonalElevation = 8.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            // 输入框
+            OutlinedTextField(
+                value = inputText,
+                onValueChange = onInputChange,
+                modifier = Modifier.weight(1f),
+                placeholder = { Text("输入指令或问题...") },
+                singleLine = false,
+                maxLines = 3,
+                enabled = enabled
+            )
+
+            // 发送按钮
+            Button(
+                onClick = onSend,
+                enabled = inputText.isNotBlank() && enabled,
+                modifier = Modifier.height(56.dp)
+            ) {
+                Text("发送")
+            }
+        }
+    }
+}
+
+// ─── 工具函数 ───────────────────────────────────
+
+private fun formatTime(timestamp: Long): String {
+    val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return sdf.format(Date(timestamp))
+}

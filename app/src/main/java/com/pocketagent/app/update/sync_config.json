@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "min_apk_version": "1.0.0",
+  "release_notes": "初始版本",
+  "datetime": "2026-05-24T00:00:00Z",
+  "files": {
+    "agent_latest.zip": "https://github.com/your-org/pocket-agent/releases/latest/download/agent_latest.zip",
+    "app_latest.apk": "https://github.com/your-org/pocket-agent/releases/latest/download/pocket-agent.apk"
+  }
+}
