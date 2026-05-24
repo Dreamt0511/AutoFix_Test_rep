@@ -22,6 +22,15 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("pocketagent.keystore")
+            storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "pocketagent123"
+            keyAlias = System.getenv("KEY_ALIAS") ?: "pocketagent"
+            keyPassword = System.getenv("KEY_PASSWORD") ?: "pocketagent123"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -30,9 +39,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 

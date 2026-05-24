@@ -18,6 +18,7 @@ local.properties
 *.aab
 *.ap_
 *.dex
+*.keystore
 
 # Backup / temp files
 *_202*
