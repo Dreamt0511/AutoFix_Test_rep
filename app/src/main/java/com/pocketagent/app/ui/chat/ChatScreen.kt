@@ -79,8 +79,14 @@ fun ChatScreen(navController: NavController) {
                             // 执行指令
                             val result = AppBootstrapper.executeCommand(inputText)
                             
+                            val resultText = when (result) {
+                                is TaskResult.Success -> result.message
+                                is TaskResult.Failure -> "错误: ${result.error}"
+                                is TaskResult.Cancelled -> "任务已取消"
+                            }
+                            
                             messages = messages + ChatMessage(
-                                text = result.message,
+                                text = resultText,
                                 isUser = false,
                                 timestamp = System.currentTimeMillis()
                             )
